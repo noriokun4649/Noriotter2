@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -39,12 +38,7 @@ public class MediaActivity extends AppCompatActivity {
                 GoogleMaterial.Icon.gmd_arrow_back).sizeDp(30).paddingDp(6).color(Color.WHITE).backgroundColor(Color.argb(140, 0, 0, 0)).roundedCornersDp(15);
         Toolbar toolbar = findViewById(R.id.toolbar3);
         toolbar.setNavigationIcon(gmdBack);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                finishAfterTransition();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finishAfterTransition());
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.media_view);
         mViewPager.setAdapter(mSectionsPagerAdapter);

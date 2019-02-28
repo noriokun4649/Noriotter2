@@ -1,6 +1,5 @@
 package jp.noriokun4649.noriotter2.fragment;
 
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,12 +30,7 @@ public class Media extends Fragment {
         if (url.contains(".mp4")) {
             imageView2.setVisibility(View.GONE);
             videoView2.setVideoURI(Uri.parse(url));
-            videoView2.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(final MediaPlayer mp) {
-                    videoView2.start();
-                }
-            });
+            videoView2.setOnPreparedListener(mp -> videoView2.start());
             videoView2.setMediaController(new MediaController(getContext()));
         } else {
             videoView2.setVisibility(View.GONE);

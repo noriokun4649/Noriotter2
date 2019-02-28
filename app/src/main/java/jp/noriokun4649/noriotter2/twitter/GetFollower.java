@@ -129,12 +129,9 @@ public class GetFollower {
 
             @Override
             public void onException(final TwitterException te, final TwitterMethod method) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        linearLayout.setVisibility(View.GONE);
-                        snackbar.show();
-                    }
+                mHandler.post(() -> {
+                    linearLayout.setVisibility(View.GONE);
+                    snackbar.show();
                 });
                 super.onException(te, method);
             }

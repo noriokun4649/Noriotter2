@@ -66,12 +66,7 @@ abstract class GetUserBase extends AppCompatActivity
         //toolbar.setTitle(getTitles());
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setNavigationIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).sizeDp(16).color(Color.WHITE));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
         realm = Realm.getDefaultInstance();
         TextView textView = findViewById(R.id.textView4);
         textView.setText(getLoadingText());

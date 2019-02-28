@@ -28,12 +28,9 @@ public class HelloActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hellow_layout);
         button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                twitterConnect.login();
-                twitterConnect.signIn(HelloActivity.this);
-            }
+        button.setOnClickListener(v -> {
+            twitterConnect.login();
+            twitterConnect.signIn(HelloActivity.this);
         });
     }
 

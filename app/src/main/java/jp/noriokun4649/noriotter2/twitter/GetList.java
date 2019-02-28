@@ -4,7 +4,6 @@
 
 package jp.noriokun4649.noriotter2.twitter;
 
-import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -104,43 +103,36 @@ public class GetList {
         twitterListener = new TwitterAdapter() {
             @Override
             public void gotUserListMembers(final PagableResponseList<User> users) {
-                mHandler.post(new Runnable() {
-                    @SuppressLint("StringFormatInvalid")
-                    @Override
-                    public void run() {
-                        for (User user : users) {
-                            count++;
-                            String[] af = {user.getName(), "@" + user.getScreenName(),
-                                    user.get400x400ProfileImageURLHttps()};
-                            arrayList.add(af);
-                            textView.setText(
-                                    context.getString(R.string.getting_list_user_more_now,
-                                            memberCount, count));
-                        }
+                mHandler.post(() -> {
+                    for (User user : users) {
+                        count++;
+                        String[] af = {user.getName(), "@" + user.getScreenName(),
+                                user.get400x400ProfileImageURLHttps()};
+                        arrayList.add(af);
+                        textView.setText(
+                                context.getString(R.string.getting_list_user_more_now,
+                                        memberCount, count));
+                    }
 
-                        if (users.hasNext()) {
-                            long cursor = users.getNextCursor();
-                            asyncTwitter.getUserListMembers(listID, cursor);
-                        } else {
-                            textView.setText(R.string.processing);
-                            /*
-                            GetCircleSpaceInfo circleSpaceInfo = new GetCircleSpaceInfo();
-                            circleSpaceInfo.getData(sharedPreferences.getBoolean("setting1",
-                                    false), arrayList, adapter, linearLayout);
-                                    */
-                        }
+                    if (users.hasNext()) {
+                        long cursor = users.getNextCursor();
+                        asyncTwitter.getUserListMembers(listID, cursor);
+                    } else {
+                        textView.setText(R.string.processing);
+                        /*
+                        GetCircleSpaceInfo circleSpaceInfo = new GetCircleSpaceInfo();
+                        circleSpaceInfo.getData(sharedPreferences.getBoolean("setting1",
+                                false), arrayList, adapter, linearLayout);
+                                */
                     }
                 });
             }
 
             @Override
             public void onException(final TwitterException te, final TwitterMethod method) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        linearLayout.setVisibility(View.GONE);
-                        snackbar.show();
-                    }
+                mHandler.post(() -> {
+                    linearLayout.setVisibility(View.GONE);
+                    snackbar.show();
                 });
                 super.onException(te, method);
             }

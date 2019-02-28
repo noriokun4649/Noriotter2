@@ -115,86 +115,73 @@ public class RealTimeLine extends Fragment implements StatusCallBack, ICallBack 
         }
         FloatingActionButton actionButton = view.findViewById(R.id.floatingActionButton);
         actionButton.setVisibility(View.VISIBLE);
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                asyncTwitter.getFriendsIDs(-1);
-            }
+        actionButton.setOnClickListener(v -> {
+            asyncTwitter.getFriendsIDs(-1);
+            Toast.makeText(getContext(),"Stream接続開始",Toast.LENGTH_LONG).show();
         });
 
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                twitterStream.shutdown();
-            }
+        imageButton.setOnClickListener(v -> twitterStream.shutdown());
+        tweetButton.setOnClickListener(v -> {
+            String text = edtext.getText().toString();
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            //if (media == null) {
+            asyncTwitter.updateStatus(text);
+                /*
+            } else {
+                asyncTwitter.updateStatus(new StatusUpdate(string).media(media));
+                media = null;
+            }*/
+            edtext.setText("");
         });
-        tweetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                String text = edtext.getText().toString();
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                //if (media == null) {
-                asyncTwitter.updateStatus(text);
-                    /*
-                } else {
-                    asyncTwitter.updateStatus(new StatusUpdate(string).media(media));
-                    media = null;
-                }*/
-                edtext.setText("");
-            }
-        });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                RealTimeLine.this.tweetList = arrayList.get(arrayList.size() - 1 - position);
-                switch (view.getId()) {
-                    case R.id.image1:
-                        openMediaActivity(view, 0, "image0", tweetList.getMedias());
-                        break;
-                    case R.id.image2:
-                        openMediaActivity(view, 1, "image1", tweetList.getMedias());
-                        break;
-                    case R.id.image3:
-                        openMediaActivity(view, 2, "image2", tweetList.getMedias());
-                        break;
-                    case R.id.image4:
-                        openMediaActivity(view, 3, "image3", tweetList.getMedias());
-                        break;
-                    case R.id.textView33:
-                            /*
-                            LayoutInflater factory = LayoutInflater.from(getContext());
-                            final View inputView = factory.inflate(R.layout.reply, null);
-                            final AlertDialog.Builder as = new AlertDialog.Builder(getContext());
-                            final AlertDialog alertDialog = as.create();
-                            alertDialog.setView(inputView);
-                            final EditText et = (EditText) inputView.findViewById(R.id.editText7);
-                            Button a = (Button) inputView.findViewById(R.id.button12);
-                            a.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String input = et.getText().toString();
-                                    asyncTwitter.updateStatus(new StatusUpdate("@" + useredata.name + " " + input).inReplyToStatusId(useredata.tweetid));
-                                    alertDialog.dismiss();
-                                }
-                            });
-                            alertDialog.show();
-                            */
-                        break;
-                    case R.id.textView36:
-                        break;
-                    case R.id.videoView:
-                        Intent intent = new Intent(getActivity(), MediaActivity.class);
-                        intent.putExtra("urls", tweetList.getMedias());
-                        intent.putExtra("index", 0);
-                        startActivity(intent);
-                        break;
-                    default:
-                        if ((view.getId() == R.id.textView34) || (view.getId() == R.id.textView35)) {
-                            RealTimeLine.this.topView = view;
-                            asyncTwitter.showStatus(tweetList.getTweetid());
-                        }
-                        break;
-                }
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            RealTimeLine.this.tweetList = arrayList.get(arrayList.size() - 1 - position);
+            switch (view1.getId()) {
+                case R.id.image1:
+                    openMediaActivity(view1, 0, "image0", tweetList.getMedias());
+                    break;
+                case R.id.image2:
+                    openMediaActivity(view1, 1, "image1", tweetList.getMedias());
+                    break;
+                case R.id.image3:
+                    openMediaActivity(view1, 2, "image2", tweetList.getMedias());
+                    break;
+                case R.id.image4:
+                    openMediaActivity(view1, 3, "image3", tweetList.getMedias());
+                    break;
+                case R.id.textView33:
+                        /*
+                        LayoutInflater factory = LayoutInflater.from(getContext());
+                        final View inputView = factory.inflate(R.layout.reply, null);
+                        final AlertDialog.Builder as = new AlertDialog.Builder(getContext());
+                        final AlertDialog alertDialog = as.create();
+                        alertDialog.setView(inputView);
+                        final EditText et = (EditText) inputView.findViewById(R.id.editText7);
+                        Button a = (Button) inputView.findViewById(R.id.button12);
+                        a.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String input = et.getText().toString();
+                                asyncTwitter.updateStatus(new StatusUpdate("@" + useredata.name + " " + input).inReplyToStatusId(useredata.tweetid));
+                                alertDialog.dismiss();
+                            }
+                        });
+                        alertDialog.show();
+                        */
+                    break;
+                case R.id.textView36:
+                    break;
+                case R.id.videoView:
+                    Intent intent = new Intent(getActivity(), MediaActivity.class);
+                    intent.putExtra("urls", tweetList.getMedias());
+                    intent.putExtra("index", 0);
+                    startActivity(intent);
+                    break;
+                default:
+                    if ((view1.getId() == R.id.textView34) || (view1.getId() == R.id.textView35)) {
+                        RealTimeLine.this.topView = view1;
+                        asyncTwitter.showStatus(tweetList.getTweetid());
+                    }
+                    break;
             }
         });
 
@@ -214,39 +201,36 @@ public class RealTimeLine extends Fragment implements StatusCallBack, ICallBack 
                         ab.setTitle(status.getText());
                         String[] items = {"りついーと", "いんようついーと"};
                         ab.setPositiveButton("閉じる", null);
-                        ab.setItems(items, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog, final int which) {
-                                switch (which) {
-                                    case 0:
-                                        asyncTwitter.retweetStatus(status.getId());
-                                        rtText.setTextColor(Color.GREEN);
-                                        tweetList.setMeRt(true);
-                                        tweetList.setRtcount(tweetList.getRtcount() + 1);
-                                        break;
-                                    case 1:/*
-                                            LayoutInflater factorys = LayoutInflater.from(getContext());
-                                            final View inputViews = factorys.inflate(R.layout.reply, null);
-                                            final AlertDialog.Builder ass = new AlertDialog.Builder(getContext());
-                                            final AlertDialog alertDialogs = ass.create();
-                                            alertDialogs.setView(inputViews);
-                                            final EditText ets = (EditText) inputViews.findViewById(R.id.editText7);
-                                            Button ast = (Button) inputViews.findViewById(R.id.button12);
-                                            ast.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    String input = ets.getText().toString();
-                                                    asyncTwitter.updateStatus(input + " https://twitter.com/" + useredata.name + "/status/" + useredata.tweetid);
-                                                    alertDialogs.dismiss();
-                                                }
-                                            });
-                                            alertDialogs.show();
-                                            */
-                                        break;
-                                    default:
-                                }
-                                tweetListItemAdapter.notifyDataSetChanged();
+                        ab.setItems(items, (dialog, which) -> {
+                            switch (which) {
+                                case 0:
+                                    asyncTwitter.retweetStatus(status.getId());
+                                    rtText.setTextColor(Color.GREEN);
+                                    tweetList.setMeRt(true);
+                                    tweetList.setRtcount(tweetList.getRtcount() + 1);
+                                    break;
+                                case 1:/*
+                                        LayoutInflater factorys = LayoutInflater.from(getContext());
+                                        final View inputViews = factorys.inflate(R.layout.reply, null);
+                                        final AlertDialog.Builder ass = new AlertDialog.Builder(getContext());
+                                        final AlertDialog alertDialogs = ass.create();
+                                        alertDialogs.setView(inputViews);
+                                        final EditText ets = (EditText) inputViews.findViewById(R.id.editText7);
+                                        Button ast = (Button) inputViews.findViewById(R.id.button12);
+                                        ast.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                String input = ets.getText().toString();
+                                                asyncTwitter.updateStatus(input + " https://twitter.com/" + useredata.name + "/status/" + useredata.tweetid);
+                                                alertDialogs.dismiss();
+                                            }
+                                        });
+                                        alertDialogs.show();
+                                        */
+                                    break;
+                                default:
                             }
+                            tweetListItemAdapter.notifyDataSetChanged();
                         });
                         ab.show();
                     } else {

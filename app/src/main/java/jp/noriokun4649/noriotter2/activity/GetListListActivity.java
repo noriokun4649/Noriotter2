@@ -83,35 +83,29 @@ public class GetListListActivity extends AppCompatActivity {
 
             @Override
             public void gotUserLists(final ResponseList<UserList> userLists) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (UserList list : userLists) {
-                            ListList listList1 = new ListList(list.getName(), list.getMemberCount(),
-                                    list.getId(), list.getUser().getName(),
-                                    list.getUser().get400x400ProfileImageURL(),
-                                    list.getDescription(), list.isPublic());
-                            adapter.add(listList1);
-                            adapter.notifyDataSetChanged();
-                        }
+                mHandler.post(() -> {
+                    for (UserList list : userLists) {
+                        ListList listList1 = new ListList(list.getName(), list.getMemberCount(),
+                                list.getId(), list.getUser().getName(),
+                                list.getUser().get400x400ProfileImageURL(),
+                                list.getDescription(), list.isPublic());
+                        adapter.add(listList1);
+                        adapter.notifyDataSetChanged();
                     }
                 });
             }
 
             @Override
             public void onException(final TwitterException te, final TwitterMethod method) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        final ListView layout = findViewById(R.id.list_import_list);
-                        Snackbar snackbar = Snackbar.make(layout, R.string.api_limit, Snackbar.LENGTH_LONG).setAction(R.string.close, new View.OnClickListener() {
-                            @Override
-                            public void onClick(final View v) {
-                                finish();
-                            }
-                        });
-                        snackbar.show();
-                    }
+                mHandler.post(() -> {
+                    final ListView layout = findViewById(R.id.list_import_list);
+                    Snackbar snackbar = Snackbar.make(layout, R.string.api_limit, Snackbar.LENGTH_LONG).setAction(R.string.close, new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View v) {
+                            finish();
+                        }
+                    });
+                    snackbar.show();
                 });
                 super.onException(te, method);
             }

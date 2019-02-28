@@ -76,20 +76,17 @@ public class TimeLine extends Fragment implements ICallBack, StatusCallBack {
         swipeRefreshLayout.setRefreshing(true);
         getTimeLine.getTimeLine();
 
-        tweetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                String text = edtext.getText().toString();
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                //if (media == null) {
-                asyncTwitter.updateStatus(text);
-                    /*
-                } else {
-                    asyncTwitter.updateStatus(new StatusUpdate(string).media(media));
-                    media = null;
-                }*/
-                edtext.setText("");
-            }
+        tweetButton.setOnClickListener(v -> {
+            String text = edtext.getText().toString();
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            //if (media == null) {
+            asyncTwitter.updateStatus(text);
+                /*
+            } else {
+                asyncTwitter.updateStatus(new StatusUpdate(string).media(media));
+                media = null;
+            }*/
+            edtext.setText("");
         });
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {

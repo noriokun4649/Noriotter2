@@ -152,6 +152,7 @@ public class TwitterConnect implements Serializable {
 
     /**
      * TwitterとOAuth認証を行う際のメソッド.
+     *
      * @param appCompatActivity appCompatActivityde
      */
     public void signIn(final AppCompatActivity appCompatActivity) {
