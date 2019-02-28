@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:title="@string/profile" />
+        <item
+            android:id="@+id/nav_list"
+            android:title="@string/list" />
+        <item
+            android:id="@+id/nav_search"
+            android:title="@string/search" />
+        <item
+            android:id="@+id/nav_free_tweet"
+            android:title="@string/free_tweet" />
+    </group>
+
+    <item android:title="@string/other">
+        <menu>
+            <item
+                android:id="@+id/nav_setting"
+                android:title="@string/setting" />
+            <item
+                android:id="@+id/nav_oss"
+                android:title="@string/oss" />
+        </menu>
+    </item>
+
+</menu>
