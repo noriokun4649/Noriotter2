@@ -120,7 +120,7 @@ public class RealTimeLine extends Fragment implements StatusCallBack, ICallBack 
         actionButton.setVisibility(View.VISIBLE);
         actionButton.setOnClickListener(v -> {
             asyncTwitter.getFriendsIDs(-1);
-            Toast.makeText(getContext(),"Stream接続開始",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Stream接続開始", Toast.LENGTH_LONG).show();
         });
 
         imageButton.setOnClickListener(v -> twitterStream.shutdown());
@@ -173,12 +173,12 @@ public class RealTimeLine extends Fragment implements StatusCallBack, ICallBack 
                     break;
                 case R.id.textView36:
                     break;
-                case R.id.videoView:
+                /* case R.id.videoView:
                     Intent intent = new Intent(getActivity(), MediaActivity.class);
                     intent.putExtra("urls", tweetList.getMedias());
                     intent.putExtra("index", 0);
                     startActivity(intent);
-                    break;
+                    break; */
                 default:
                     if ((view1.getId() == R.id.textView34) || (view1.getId() == R.id.textView35)) {
                         RealTimeLine.this.topView = view1;

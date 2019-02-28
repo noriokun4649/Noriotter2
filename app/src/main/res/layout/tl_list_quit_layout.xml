@@ -119,10 +119,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <VideoView
-        android:id="@+id/quit_videoView"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:foregroundGravity="center"
-        android:visibility="gone" />
 </LinearLayout>

@@ -184,13 +184,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <VideoView
-                android:id="@+id/videoView"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:foregroundGravity="center"
-                android:visibility="gone" />
-
             <include
                 layout="@layout/tl_list_quit_layout"
                 android:layout_width="match_parent"

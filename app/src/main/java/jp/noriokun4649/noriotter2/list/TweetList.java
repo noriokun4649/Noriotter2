@@ -29,6 +29,44 @@ public class TweetList {
     private String[] quitUrls;
     private boolean meRt;
     private boolean meFav;
+    private String movieThumbnail;
+    private String quitMovieThumbnail;
+
+    /**
+     * Gets quitMovieThumbnail .
+     *
+     * @return value of quitMovieThumbnail
+     */
+    public String getQuitMovieThumbnail() {
+        return quitMovieThumbnail;
+    }
+
+    /**
+     * Sets quitMovieThumbnail .
+     *
+     * @param quitMovieThumbnail set in quitMovieThumbnail
+     */
+    public void setQuitMovieThumbnail(final String quitMovieThumbnail) {
+        this.quitMovieThumbnail = quitMovieThumbnail;
+    }
+
+    /**
+     * Gets movieThumbnail .
+     *
+     * @return value of movieThumbnail
+     */
+    public String getMovieThumbnail() {
+        return movieThumbnail;
+    }
+
+    /**
+     * Sets movieThumbnail .
+     *
+     * @param movieThumbnail set in movieThumbnail
+     */
+    public void setMovieThumbnail(final String movieThumbnail) {
+        this.movieThumbnail = movieThumbnail;
+    }
 
     /**
      * Gets isLock .

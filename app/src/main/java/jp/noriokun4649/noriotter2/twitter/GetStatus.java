@@ -112,6 +112,8 @@ public class GetStatus {
         String[] quitMedias = null;
         String[] quitUrls = null;
         boolean isQuit = false;
+        String movieThumbnail = null;
+        String quitMovieThumbnail = null;
 
         if (statusMain.getQuotedStatus() != null) {
             isQuit = true;
@@ -125,6 +127,7 @@ public class GetStatus {
                 Object[] objects = getMedias(quitMediEntiy, quitText);
                 quitMedias = (String[]) objects[0];
                 quitText = (String) objects[1];
+                quitMovieThumbnail = (String) objects[2];
             }
 
             URLEntity[] quitUrlEntities = statusMain.getQuotedStatus().getURLEntities();
@@ -141,6 +144,7 @@ public class GetStatus {
             Object[] objects = getMedias(mediaEntitiesd, text);
             medias = (String[]) objects[0];
             text = (String) objects[1];
+            movieThumbnail = (String) objects[2];
         }
 
         // . RTツイート本文にリンクURLが含まれていれば取り出す
@@ -180,6 +184,8 @@ public class GetStatus {
             useredata.setQuitUrls(quitUrls);
             useredata.setMeRt(meRt);
             useredata.setMeFav(meFav);
+            useredata.setMovieThumbnail(movieThumbnail);
+            useredata.setQuitMovieThumbnail(quitMovieThumbnail);
             adapter.add(useredata);
             adapter.notifyDataSetChanged();
         }
@@ -199,6 +205,7 @@ public class GetStatus {
 
     private Object[] getMedias(final MediaEntity[] mediaEntities, final String texts) {
         String text = texts;
+        String movieThumbnail = "";
         List list = new ArrayList();
         for (int i = 0; i < mediaEntities.length; i++) {
             MediaEntity mentity = mediaEntities[i];
@@ -207,10 +214,11 @@ public class GetStatus {
                 expandedURL = mentity.getMediaURLHttps();
             } else {
                 expandedURL = mentity.getVideoVariants()[0].getUrl();
+                movieThumbnail = mentity.getMediaURLHttps();
             }
             list.add(expandedURL);
             text = texts.replace(mentity.getURL(), "");
         }
-        return new Object[]{(String[]) list.toArray(new String[0]), text};
+        return new Object[]{(String[]) list.toArray(new String[0]), text, movieThumbnail};
     }
 }

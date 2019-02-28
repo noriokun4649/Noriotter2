@@ -166,12 +166,12 @@ public class TimeLine extends Fragment implements ICallBack, StatusCallBack {
                         break;
                     case R.id.textView36:
                         break;
-                    case R.id.videoView:
+                    /* case R.id.videoView:
                         Intent intent = new Intent(getActivity(), MediaActivity.class);
                         intent.putExtra("urls", tweetList.getMedias());
                         intent.putExtra("index", 0);
                         startActivity(intent);
-                        break;
+                        break; */
                     default:
                         if ((view.getId() == R.id.textView34) || (view.getId() == R.id.textView35)) {
                             TimeLine.this.topView = view;
