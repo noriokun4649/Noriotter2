@@ -3,6 +3,7 @@ package jp.noriokun4649.noriotter2.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -38,7 +39,7 @@ public class MediaActivity extends AppCompatActivity {
                 GoogleMaterial.Icon.gmd_arrow_back).sizeDp(30).paddingDp(6).color(Color.WHITE).backgroundColor(Color.argb(140, 0, 0, 0)).roundedCornersDp(15);
         Toolbar toolbar = findViewById(R.id.toolbar3);
         toolbar.setNavigationIcon(gmdBack);
-        toolbar.setNavigationOnClickListener(v -> finishAfterTransition());
+        toolbar.setNavigationOnClickListener(v -> finish());
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.media_view);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -61,6 +62,14 @@ public class MediaActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
