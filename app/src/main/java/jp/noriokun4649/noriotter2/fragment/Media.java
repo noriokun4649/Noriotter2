@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -27,12 +28,17 @@ public class Media extends Fragment {
         String url = getArguments().getString("image_url");
         ImageView imageView2 = view.findViewById(R.id.imageView2);
         VideoView videoView2 = view.findViewById(R.id.videoView2);
+        ProgressBar progressBar = view.findViewById(R.id.progressBar2);
         if (url.contains(".mp4") || url.contains(".m3u8")) {
             imageView2.setVisibility(View.GONE);
             videoView2.setVideoURI(Uri.parse(url));
-            videoView2.setOnPreparedListener(mp -> videoView2.start());
+            videoView2.setOnPreparedListener(mp -> {
+                videoView2.start();
+                progressBar.setVisibility(View.GONE);
+            });
             videoView2.setMediaController(new MediaController(getContext()));
         } else {
+            progressBar.setVisibility(View.GONE);
             videoView2.setVisibility(View.GONE);
             imageView2.setTransitionName("image" + index);
             Glide.with(this).setDefaultRequestOptions(new RequestOptions().dontTransform()).load(url).into(imageView2);
