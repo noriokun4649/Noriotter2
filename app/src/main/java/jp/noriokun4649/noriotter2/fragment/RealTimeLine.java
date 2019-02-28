@@ -1,6 +1,5 @@
 package jp.noriokun4649.noriotter2.fragment;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -11,13 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
@@ -114,6 +115,8 @@ public class RealTimeLine extends Fragment implements StatusCallBack, ICallBack 
             twitterStream.addListener(userStreamAdapter);
         }
         FloatingActionButton actionButton = view.findViewById(R.id.floatingActionButton);
+        IconicsDrawable gmdAuto = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_autorenew);
+        actionButton.setImageDrawable(gmdAuto);
         actionButton.setVisibility(View.VISIBLE);
         actionButton.setOnClickListener(v -> {
             asyncTwitter.getFriendsIDs(-1);
