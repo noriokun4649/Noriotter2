@@ -16,6 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
@@ -75,6 +78,13 @@ public class TimeLine extends Fragment implements ICallBack, StatusCallBack {
         });
         swipeRefreshLayout.setRefreshing(true);
         getTimeLine.getTimeLine();
+        FloatingActionButton actionButton = view.findViewById(R.id.floatingActionButton);
+        IconicsDrawable gmdUp = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_arrow_upward);
+        actionButton.setImageDrawable(gmdUp);
+        actionButton.setVisibility(View.VISIBLE);
+        actionButton.setOnClickListener(v -> {
+            listView.smoothScrollToPosition(0);
+        });
 
         tweetButton.setOnClickListener(v -> {
             String text = edtext.getText().toString();
