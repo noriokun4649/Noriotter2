@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,7 +26,6 @@ import java.util.regex.Pattern;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import jp.noriokun4649.noriotter2.R;
-import jp.noriokun4649.noriotter2.glide.MyGlideApp;
 import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -62,15 +62,15 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
         TextView textView34 = view.findViewById(R.id.textView34);
         TextView textView35 = view.findViewById(R.id.textView35);
         TextView textView36 = view.findViewById(R.id.textView36);
-        ImageView image17 = view.findViewById(R.id.image1);
-        ImageView image18 = view.findViewById(R.id.image2);
-        ImageView image19 = view.findViewById(R.id.image3);
-        ImageView image20 = view.findViewById(R.id.image4);
+        SimpleDraweeView image17 = view.findViewById(R.id.image1);
+        SimpleDraweeView image18 = view.findViewById(R.id.image2);
+        SimpleDraweeView image19 = view.findViewById(R.id.image3);
+        SimpleDraweeView image20 = view.findViewById(R.id.image4);
         ImageView isLock = view.findViewById(R.id.imageView13);
         ImageView isOfficial = view.findViewById(R.id.imageView14);
-        VideoView video = view.findViewById(R.id.videoView);
+        //VideoView video = view.findViewById(R.id.videoView);
         ConstraintLayout constraintLayout = view.findViewById(R.id.image_layout);
-        final ImageView imageView8 = view.findViewById(R.id.imageView8);
+        final SimpleDraweeView imageView8 = view.findViewById(R.id.imageView8);
         final TweetList useredata = arrayList.get(getCount() - 1 - position);
         if (useredata.getLocation().equals("")) {
             textView14.setVisibility(View.GONE);
@@ -92,7 +92,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
             }
         }
         if (useredata.getMedias() != null) {
-            mediaTweet(clickListener, useredata.getMedias(), constraintLayout, video, view, image17, image18, image19, image20);
+            mediaTweet(clickListener, useredata.getMedias(), constraintLayout, useredata.getMovieThumbnail(), /* video,*/ view, image17, image18, image19, image20);
         }
         if (useredata.isRetwet()) {
             textView32.setVisibility(View.VISIBLE);
@@ -112,12 +112,12 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
             if (useredata.getQuitMedias() != null) {
                 ConstraintLayout quitImageLayout = view.findViewById(R.id.quit_image_layout);
                 quitImageLayout.setVisibility(View.VISIBLE);
-                VideoView quitVideo = view.findViewById(R.id.quit_videoView);
-                ImageView quitImage1 = view.findViewById(R.id.quit_image1);
-                ImageView quitImage2 = view.findViewById(R.id.quit_image2);
-                ImageView quitImage3 = view.findViewById(R.id.quit_image3);
-                ImageView quitImage4 = view.findViewById(R.id.quit_image4);
-                mediaTweet(clickListener, useredata.getQuitMedias(), quitImageLayout, quitVideo, view, quitImage1, quitImage2, quitImage3, quitImage4);
+                //VideoView quitVideo = view.findViewById(R.id.quit_videoView);
+                SimpleDraweeView quitImage1 = view.findViewById(R.id.quit_image1);
+                SimpleDraweeView quitImage2 = view.findViewById(R.id.quit_image2);
+                SimpleDraweeView quitImage3 = view.findViewById(R.id.quit_image3);
+                SimpleDraweeView quitImage4 = view.findViewById(R.id.quit_image4);
+                mediaTweet(clickListener, useredata.getQuitMedias(), quitImageLayout, useredata.getQuitMovieThumbnail(), /*quitVideo,*/ view, quitImage1, quitImage2, quitImage3, quitImage4);
             }
         }
         textView33.setText("{cmd-message}");
@@ -160,41 +160,53 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
         }
         textView10.setText(useredata.getTimestamp());
         textView14.setText(useredata.getLocation());
-        final Uri uri = Uri.parse(useredata.getImageURL());
-        MyGlideApp.with(view).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView8);
+        imageView8.setImageURI(useredata.getImageURL());
+        //MyGlideApp.with(view).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView8);
 
         return view;
     }
 
     private void mediaTweet(final View.OnClickListener clickListener, final String[] media,
                             final ConstraintLayout constraintLayout,
-                            final VideoView video, final View mainView, final ImageView image1,
-                            final ImageView image2, final ImageView image3, final ImageView image4) {
+                            final String movieThumbnail/*final VideoView video*/, final View mainView, final SimpleDraweeView image1,
+                            final SimpleDraweeView image2, final SimpleDraweeView image3, final SimpleDraweeView image4) {
         if (media[0].contains(".mp4")) {
-            constraintLayout.setVisibility(View.GONE);
-            video.setVisibility(View.VISIBLE);
-            video.setVideoURI(Uri.parse(media[0]));
-            video.setOnClickListener(clickListener);
+            IconicsDrawable gmdPlay = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_play_circle_filled).paddingDp(40);
+            constraintLayout.setVisibility(View.VISIBLE);
+            image1.setVisibility(View.VISIBLE);
+            image1.setOnClickListener(clickListener);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                image1.setForeground(gmdPlay);
+            }
+            image1.setImageURI(movieThumbnail);
+            //Glide.with(mainView).load(movieThumbnail).diskCacheStrategy(DiskCacheStrategy.ALL).into(image1);
+            //video.setVisibility(View.VISIBLE);
+            //video.setVideoURI(Uri.parse(media[0]));
+            //video.setOnClickListener(clickListener);
         } else {
             constraintLayout.setVisibility(View.VISIBLE);
-            video.setVisibility(View.GONE);
+            //video.setVisibility(View.GONE);
             switch (media.length) {
                 case 4:
                     image4.setVisibility(View.VISIBLE);
                     image4.setOnClickListener(clickListener);
-                    Glide.with(mainView).load(media[3]).diskCacheStrategy(DiskCacheStrategy.ALL).into(image4);
+                    image4.setImageURI(media[3]);
+                    //Glide.with(mainView).load(media[3]).diskCacheStrategy(DiskCacheStrategy.ALL).into(image4);
                 case 3:
                     image3.setVisibility(View.VISIBLE);
                     image3.setOnClickListener(clickListener);
-                    Glide.with(mainView).load(media[2]).diskCacheStrategy(DiskCacheStrategy.ALL).into(image3);
+                    image3.setImageURI(media[2]);
+                    //Glide.with(mainView).load(media[2]).diskCacheStrategy(DiskCacheStrategy.ALL).into(image3);
                 case 2:
                     image2.setVisibility(View.VISIBLE);
                     image2.setOnClickListener(clickListener);
-                    Glide.with(mainView).load(media[1]).diskCacheStrategy(DiskCacheStrategy.ALL).into(image2);
+                    image2.setImageURI(media[1]);
+                    //Glide.with(mainView).load(media[1]).diskCacheStrategy(DiskCacheStrategy.ALL).into(image2);
                 case 1:
                     image1.setVisibility(View.VISIBLE);
                     image1.setOnClickListener(clickListener);
-                    Glide.with(mainView).load(media[0]).diskCacheStrategy(DiskCacheStrategy.ALL).into(image1);
+                    image1.setImageURI(media[0]);
+                    //Glide.with(mainView).load(media[0]).diskCacheStrategy(DiskCacheStrategy.ALL).into(image1);
                     break;
                 default:
                     constraintLayout.setVisibility(View.GONE);

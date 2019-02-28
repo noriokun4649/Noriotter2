@@ -8,6 +8,7 @@ package jp.noriokun4649.noriotter2;
 import android.app.Application;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -20,6 +21,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         TypefaceProvider.registerDefaultIconSets();
+        Fresco.initialize(this);
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder().name("noriokunrealm.realm").build();
     }
