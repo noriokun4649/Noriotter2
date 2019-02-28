@@ -27,7 +27,7 @@ public class Media extends Fragment {
         String url = getArguments().getString("image_url");
         ImageView imageView2 = view.findViewById(R.id.imageView2);
         VideoView videoView2 = view.findViewById(R.id.videoView2);
-        if (url.contains(".mp4")) {
+        if (url.contains(".mp4") || url.contains(".m3u8")) {
             imageView2.setVisibility(View.GONE);
             videoView2.setVideoURI(Uri.parse(url));
             videoView2.setOnPreparedListener(mp -> videoView2.start());

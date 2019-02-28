@@ -170,7 +170,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
                             final ConstraintLayout constraintLayout,
                             final String movieThumbnail/*final VideoView video*/, final View mainView, final SimpleDraweeView image1,
                             final SimpleDraweeView image2, final SimpleDraweeView image3, final SimpleDraweeView image4) {
-        if (media[0].contains(".mp4")) {
+        if (media[0].contains(".mp4") || media[0].contains(".m3u8")) {
             IconicsDrawable gmdPlay = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_play_circle_filled).paddingDp(40);
             constraintLayout.setVisibility(View.VISIBLE);
             image1.setVisibility(View.VISIBLE);
