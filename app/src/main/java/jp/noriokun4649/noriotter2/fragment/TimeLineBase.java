@@ -263,7 +263,7 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
                         ab.show();
                     } else {
                         //asyncTwitter
-                        asyncTwitter.destroyStatus(status.getId());
+                        asyncTwitter.unretweetStatus(status.getId());
                         tweetList.setMeRt(false);
                         rtText.setTextColor(Color.BLACK);
                         tweetList.setRtcount(tweetList.getRtcount() - 1);
