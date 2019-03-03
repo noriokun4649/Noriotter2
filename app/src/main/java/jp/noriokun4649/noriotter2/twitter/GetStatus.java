@@ -29,6 +29,7 @@ public class GetStatus {
 
     private ICallBack iCallBack;
     private long[] follow;
+    private boolean addMode = false;
 
     public GetStatus(final long[] follow) {
         this.follow = follow;
@@ -36,10 +37,19 @@ public class GetStatus {
     }
 
     public GetStatus(final ResponseList<Status> statuses, final AsyncTwitter asyncTwitterd,
-                     final TweetListItemAdapter adapter, final Activity context, final ICallBack callBack) {
-        Collections.reverse(statuses);
-        for (Status status : statuses) {
-            getStatus(status, asyncTwitterd, adapter, context, true);
+                     final TweetListItemAdapter adapter, final Activity context, final ICallBack callBack,
+                     final boolean addMode) {
+        this.addMode = addMode;
+        int i;
+        if (!addMode) {
+            Collections.reverse(statuses);
+            i=0;
+        }else {
+            i
+                    =1;
+        }
+        for (; i < statuses.size(); i++) {
+            getStatus(statuses.get(i), asyncTwitterd, adapter, context, true);
         }
         iCallBack = callBack;
         finish();
@@ -186,7 +196,11 @@ public class GetStatus {
             useredata.setMeFav(meFav);
             useredata.setMovieThumbnail(movieThumbnail);
             useredata.setQuitMovieThumbnail(quitMovieThumbnail);
-            adapter.add(useredata);
+            if(!addMode) {
+                adapter.add(useredata);
+            }else {
+                adapter.insert(useredata,0);
+            }
             adapter.notifyDataSetChanged();
         }
     }

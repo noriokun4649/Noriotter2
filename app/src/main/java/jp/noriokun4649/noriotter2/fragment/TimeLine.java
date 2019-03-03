@@ -50,6 +50,8 @@ public class TimeLine extends Fragment implements ICallBack, StatusCallBack {
     private View topView;
     private TweetList tweetList;
     private AsyncTwitter asyncTwitter;
+    private ListView listView;
+    private boolean flag = false;
 
     @Nullable
     @Override
@@ -59,7 +61,7 @@ public class TimeLine extends Fragment implements ICallBack, StatusCallBack {
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
         twitterConnect = new TwitterConnect(inflater.getContext());
         twitterConnect.login();
-        ListView listView = view.findViewById(R.id.time_line);
+        listView = view.findViewById(R.id.time_line);
         arrayList = new ArrayList<>();
         tweetListItemAdapter = new TweetListItemAdapter(getContext(), arrayList);
         listView.setAdapter(tweetListItemAdapter);
@@ -73,7 +75,9 @@ public class TimeLine extends Fragment implements ICallBack, StatusCallBack {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getTimeLine.getFutureTimeLine(arrayList.get(arrayList.size() - 1).getTweetid());
+                if(arrayList.size() > 0) {
+                    getTimeLine.getFutureTimeLine(arrayList.get(arrayList.size() - 1).getTweetid());
+                }
             }
         });
         swipeRefreshLayout.setRefreshing(true);
@@ -102,9 +106,10 @@ public class TimeLine extends Fragment implements ICallBack, StatusCallBack {
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(final AbsListView view, final int scrollState) {
-                if (listView.getLastVisiblePosition() == (tweetListItemAdapter.getCount() - 1)) {
-                    //swipeRefreshLayout.setRefreshing(true);
-                    //getTimeLine.getOldTimeLine(arrayList.get(0).tweetid);
+                if (listView.getLastVisiblePosition() == (tweetListItemAdapter.getCount() - 1) && !flag) {
+                    swipeRefreshLayout.setRefreshing(true);
+                    getTimeLine.getOldTimeLine(arrayList.get(0).getTweetid());
+                    flag = true;
                 }
             }
 
@@ -195,6 +200,7 @@ public class TimeLine extends Fragment implements ICallBack, StatusCallBack {
 
     @Override
     public void callback() {
+        flag = false;
         swipeRefreshLayout.setRefreshing(false);
     }
 

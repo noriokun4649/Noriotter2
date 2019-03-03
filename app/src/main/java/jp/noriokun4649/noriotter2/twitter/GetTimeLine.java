@@ -35,7 +35,7 @@ public class GetTimeLine {
      */
     private FragmentActivity context;
 
-    //private boolean mode = false;
+    private boolean mode = false;
 
 
     public GetTimeLine(final FragmentActivity contexts, final AsyncTwitter asyncTwitterd, final TweetListItemAdapter adapter, final ICallBack callBack) {
@@ -50,7 +50,7 @@ public class GetTimeLine {
                         Collections.reverse(statuses);
                     }
                     */
-                    GetStatus status = new GetStatus(statuses, asyncTwitter, adapter, context, callBack);
+                    GetStatus status = new GetStatus(statuses, asyncTwitter, adapter, context, callBack,mode);
                 });
             }
 
@@ -58,7 +58,9 @@ public class GetTimeLine {
             public void onException(final TwitterException te, final TwitterMethod method) {
                 super.onException(te, method);
                 mHandler.post(() -> {
-                    Toast.makeText(context, R.string.api_limit, Toast.LENGTH_LONG).show();
+                    if (te.getErrorCode() == 88) {
+                        Toast.makeText(context, R.string.api_limit, Toast.LENGTH_LONG).show();
+                    }
                     te.printStackTrace();
                     callBack.callback();
                 });
@@ -68,12 +70,14 @@ public class GetTimeLine {
     }
 
     public void getTimeLine() {
+        mode = false;
         Paging paging = new Paging();
         paging.setCount(200);
         asyncTwitter.getHomeTimeline(paging);
     }
 
     public void getFutureTimeLine(final long sinceId) {
+        mode = false;
         Paging paging = new Paging();
         paging.setCount(200);
         paging.setSinceId(sinceId);
@@ -81,7 +85,7 @@ public class GetTimeLine {
     }
 
     public void getOldTimeLine(final long maxId) {
-        //mode = true;
+        mode = true;
         Paging paging = new Paging();
         paging.setCount(200);
         paging.setMaxId(maxId);
