@@ -160,6 +160,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
         }
         textView10.setText(useredata.getTimestamp());
         textView14.setText(useredata.getLocation());
+        imageView8.setOnClickListener(clickListener);
         imageView8.setImageURI(useredata.getImageURL());
         //MyGlideApp.with(view).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView8);
 

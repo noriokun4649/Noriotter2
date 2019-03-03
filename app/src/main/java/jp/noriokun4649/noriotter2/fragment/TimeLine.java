@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.activity.MediaActivity;
+import jp.noriokun4649.noriotter2.activity.UserPageActivity;
 import jp.noriokun4649.noriotter2.list.TweetList;
 import jp.noriokun4649.noriotter2.list.TweetListItemAdapter;
 import jp.noriokun4649.noriotter2.twitter.GetTimeLine;
@@ -177,6 +178,10 @@ public class TimeLine extends Fragment implements ICallBack, StatusCallBack {
                         intent.putExtra("index", 0);
                         startActivity(intent);
                         break; */
+                    case R.id.imageView8:
+                        Intent intent = new Intent(getActivity(), UserPageActivity.class);
+                        intent.putExtra("userid",tweetList.getScreanname());
+                        startActivity(intent);
                     default:
                         if ((view.getId() == R.id.textView34) || (view.getId() == R.id.textView35)) {
                             TimeLine.this.topView = view;
