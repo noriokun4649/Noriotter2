@@ -66,6 +66,7 @@ public class RealTimeLine extends Fragment implements StatusCallBack, ICallBack 
         @Override
         public void onException(final Exception ex) {
             handler.post(() -> {
+                twitterStream.shutdown();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                 alertDialog.setTitle("Error ( *´艸｀)");
                 alertDialog.setMessage(ex.getMessage());
