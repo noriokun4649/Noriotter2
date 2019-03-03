@@ -153,6 +153,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
+        if (id == R.id.nav_list) {
+            startActivity(new Intent(MainActivity.this, ListListActivity.class));
+        }
 /*
         if (id == R.id.nav_camera) {
             // Handle the camera action
@@ -170,7 +173,7 @@ public class MainActivity extends AppCompatActivity
 */
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     @Override
