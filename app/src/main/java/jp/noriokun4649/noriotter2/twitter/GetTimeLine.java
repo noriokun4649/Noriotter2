@@ -50,7 +50,7 @@ public class GetTimeLine {
                         Collections.reverse(statuses);
                     }
                     */
-                    GetStatus status = new GetStatus(statuses, asyncTwitter, adapter, context, callBack,mode);
+                    GetStatus status = new GetStatus(statuses, asyncTwitter, adapter, context, callBack, mode);
                 });
             }
 

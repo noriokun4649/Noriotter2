@@ -43,10 +43,10 @@ public class GetStatus {
         int i;
         if (!addMode) {
             Collections.reverse(statuses);
-            i=0;
-        }else {
+            i = 0;
+        } else {
             i
-                    =1;
+                    = 1;
         }
         for (; i < statuses.size(); i++) {
             getStatus(statuses.get(i), asyncTwitterd, adapter, context, true);
@@ -196,10 +196,10 @@ public class GetStatus {
             useredata.setMeFav(meFav);
             useredata.setMovieThumbnail(movieThumbnail);
             useredata.setQuitMovieThumbnail(quitMovieThumbnail);
-            if(!addMode) {
+            if (!addMode) {
                 adapter.add(useredata);
-            }else {
-                adapter.insert(useredata,0);
+            } else {
+                adapter.insert(useredata, 0);
             }
             adapter.notifyDataSetChanged();
         }

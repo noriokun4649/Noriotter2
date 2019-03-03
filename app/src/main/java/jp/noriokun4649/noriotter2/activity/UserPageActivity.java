@@ -43,11 +43,11 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        String id =  getIntent().getStringExtra("userid");
+        String id = getIntent().getStringExtra("userid");
         twitterConnect.login();
         AsyncTwitter asyncTwitter = twitterConnect.getmTwitter();
-        GetUserProfile userProfile = new GetUserProfile(this,asyncTwitter,this);
-        userProfile.getUserProfile("@"+id);
+        GetUserProfile userProfile = new GetUserProfile(this, asyncTwitter, this);
+        userProfile.getUserProfile("@" + id);
         IconicsDrawable gmdBack = new IconicsDrawable(this,
                 GoogleMaterial.Icon.gmd_arrow_back).sizeDp(30).paddingDp(6).color(Color.WHITE).backgroundColor(Color.argb(140, 0, 0, 0)).roundedCornersDp(15);
         toolbar = findViewById(R.id.toolbar2);
@@ -76,7 +76,7 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
             MyGlideApp.with(this).load(user.get400x400ProfileImageURLHttps()).circleCrop().into(imageIcon);
             Glide.with(this).load(user.getProfileBanner1500x500URL()).into(imageheder);
             textName.setText(user.getName());
-            textScreenName.setText("@"+user.getScreenName());
+            textScreenName.setText("@" + user.getScreenName());
             textInfo.setText(user.getDescription());
             if (user.getDescription().equals("")) {
                 textInfo.setVisibility(View.GONE);
@@ -89,8 +89,8 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
                 textUrl.setVisibility(View.VISIBLE);
                 textUrl.setText(user.getURLEntity().getExpandedURL());
             }
-            textFollow.setText(String.valueOf(user.getFriendsCount())+"フォロー");
-            textFollower.setText(String.valueOf(user.getFollowersCount())+"フォロワー");
+            textFollow.setText(String.valueOf(user.getFriendsCount()) + "フォロー");
+            textFollower.setText(String.valueOf(user.getFollowersCount()) + "フォロワー");
             textStartDay.setText(new SimpleDateFormat("yyyy年MM月dd日").format(user.getCreatedAt()));
             //toolbar.setTitle(user.getName()+user.getStatusesCount()+"ツイート");
         });
