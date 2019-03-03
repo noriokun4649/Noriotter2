@@ -31,7 +31,7 @@
     <string name="oss">Open Source License</string>
     <string name="home">Home</string>
     <string name="real_time_home">Realtime\nHome</string>
-    <string name="notice">Notice</string>
+    <string name="notice">Mention \n RT</string>
     <string name="dm">DM</string>
     <string name="welcome" translatable="false">Welcome to Noriotter2</string>
     <string name="welcome_info">Welcome to Noriotter \n To use this application, you first need to link with Twitter and log in.</string>
@@ -39,4 +39,6 @@
     <string name="follow">%1$d Following</string>
     <string name="follower">%1$d Followers</string>
     <string name="start_noriotter">Start Noriotter2 !!</string>
+    <string name="tweets">Tweets</string>
+    <string name="users">Users</string>
 </resources>
