@@ -38,7 +38,9 @@
             />
         <activity android:name=".activity.UserPageActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.Test"
+        <activity android:name=".activity.ListListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.ListDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
