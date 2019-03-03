@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.glide.MyGlideApp;
 import jp.noriokun4649.noriotter2.twitter.GetUserProfile;
@@ -27,18 +29,20 @@ import twitter4j.User;
 
 public class UserPageActivity extends AppCompatActivity implements StatusCallBack {
 
+    Handler had = new Handler();
     /**
      * Twitterのインスタンス.
      */
     private TwitterConnect twitterConnect = new TwitterConnect(this);
-
-    Handler had = new Handler();
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile_layout);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         String id =  getIntent().getStringExtra("userid");
         twitterConnect.login();
         AsyncTwitter asyncTwitter = twitterConnect.getmTwitter();

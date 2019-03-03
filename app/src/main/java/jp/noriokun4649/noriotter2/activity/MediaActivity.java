@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -12,6 +13,7 @@ import com.mikepenz.iconics.IconicsDrawable;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -31,6 +33,9 @@ public class MediaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.media_layout);
         getWindow().setSharedElementsUseOverlay(true);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         Intent intent = getIntent();
         this.url = intent.getStringArrayExtra("urls");
         count = url.length;
