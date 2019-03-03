@@ -267,6 +267,7 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
                         tweetList.setMeRt(false);
                         rtText.setTextColor(Color.BLACK);
                         tweetList.setRtcount(tweetList.getRtcount() - 1);
+                        tweetListItemAdapter.notifyDataSetChanged();
                     }
                     break;
                 case R.id.textView35:
