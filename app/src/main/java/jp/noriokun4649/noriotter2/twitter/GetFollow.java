@@ -4,20 +4,13 @@
 
 package jp.noriokun4649.noriotter2.twitter;
 
-import android.content.SharedPreferences;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import jp.noriokun4649.noriotter2.R;
+import jp.noriokun4649.noriotter2.list.UserList;
+import jp.noriokun4649.noriotter2.list.UserListItemAdapter;
 import twitter4j.AsyncTwitter;
 import twitter4j.IDs;
 import twitter4j.ResponseList;
@@ -37,14 +30,6 @@ public class GetFollow {
      */
     private Handler mHandler = new Handler();
     /**
-     * 　取得進捗をひょじするびゅー.
-     */
-    private LinearLayout linearLayout;
-    /**
-     * 進捗表示するびゅーのテキスト.
-     */
-    private TextView textView;
-    /**
      * 非同期処理のTwitterインスタンス.
      */
     private AsyncTwitter asyncTwitter;
@@ -56,11 +41,6 @@ public class GetFollow {
      * アクティビティの情報.
      */
     private AppCompatActivity context;
-    /**
-     * スナックバー.
-     */
-    private Snackbar snackbar;
-
 
     /**
      * コンストラクタ.
@@ -69,18 +49,9 @@ public class GetFollow {
      * @param contexts     アプリケーションコンテキスト
      * @param asyncTwitter 非同期処理のTwitterインスタンス
      */
-    public GetFollow(final AppCompatActivity contexts, final AsyncTwitter asyncTwitter) {
+    public GetFollow(final AppCompatActivity contexts, final AsyncTwitter asyncTwitter, final UserListItemAdapter adapter) {
         this.asyncTwitter = asyncTwitter;
         this.context = contexts;
-        final CoordinatorLayout layout = context.findViewById(R.id.coord);
-        snackbar = Snackbar.make(layout, R.string.api_limit,
-                Snackbar.LENGTH_LONG).setAction(R.string.close, new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                context.finish();
-            }
-        });
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         twitterListener = new TwitterAdapter() {
 
             //フォロー中ユーザーの内部IDを1回につき5000件取得
@@ -111,28 +82,25 @@ public class GetFollow {
             @Override
             public void lookedupUsers(final ResponseList<User> users) {
                 mHandler.post(() -> {
-                    ArrayList<String[]> arrayList = new ArrayList<>();
-                    for (User stat : users) {
-                        String[] af = {stat.getName(), "@" + stat.getScreenName(),
-                                stat.get400x400ProfileImageURLHttps()};
-                        arrayList.add(af);
+                    for (User user : users) {
+                        UserList userList = new UserList();
+                        userList.setUserIconUrl(user.get400x400ProfileImageURLHttps());
+                        userList.setUserName(user.getName());
+                        userList.setUserScreenName("@" + user.getScreenName());
+                        userList.setUserId(user.getId());
+                        userList.setUserInfo(user.getDescription());
+                        userList.setUserLock(user.isProtected());
+                        userList.setUserOffical(user.isVerified());
+                        adapter.add(userList);
+                        adapter.notifyDataSetChanged();
                     }
-                    // ここでフォローユーザーの情報すべてとれる。
-                    /*
-                    GetCircleSpaceInfo circleSpaceInfo = new GetCircleSpaceInfo();
-                    textView.setText(R.string.processing);
-                    circleSpaceInfo.getData(sharedPreferences.getBoolean("setting0",
-                            true), arrayList, adapter, linearLayout);
-                    */
-                    linearLayout.setVisibility(View.GONE);
                 });
             }
 
             @Override
             public void onException(final TwitterException te, final TwitterMethod method) {
                 mHandler.post(() -> {
-                    linearLayout.setVisibility(View.GONE);
-                    snackbar.show();
+                    Toast.makeText(context, R.string.api_limit, Toast.LENGTH_LONG).show();
                 });
                 super.onException(te, method);
             }
