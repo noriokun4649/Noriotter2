@@ -13,6 +13,7 @@
     <string name="menber">%1$d人のメンバーがいます</string>
     <string name="owner">作成者:%1$s</string>
     <string name="getting_follow_user_now">フォロー中のユーザーを取得中です......</string>
+    <string name="getting_follower_user_now">フォローされているユーザーを取得中です......</string>
     <string name="getting_list_user_now">リストに追加されているユーザーを取得中です......</string>
     <string name="getting_list_now">リストの一覧を取得中です......</string>
     <string name="getting_list_user_more_now">リストに追加されている%1$dユーザー中\n%2$dユーザーを取得中......</string>
@@ -33,9 +34,13 @@
     <string name="dm">ダイレクト\nメッセージ</string>
     <string name="welcome_info" translatable="false">Noriotter2へようこそ\nこのアプリを使うにはまずはTwitterと連携し、ログインする必要があります。</string>
     <string name="now_hint">ねぇ今なにしてんの？</string>
-    <string name="follow">%1$d フォロー</string>
-    <string name="follower">%1$d フォロワー</string>
+    <string name="follow_count">%1$d フォロー</string>
+    <string name="follower_count">%1$d フォロワー</string>
     <string name="start_noriotter">さっそく始める</string>
     <string name="users">ユーザー</string>
     <string name="tweets">ツイート</string>
+    <string name="follow">フォロー</string>
+    <string name="follower">フォロワー</string>
+    <string name="mention">返信</string>
+    <string name="like">いいね</string>
 </resources>

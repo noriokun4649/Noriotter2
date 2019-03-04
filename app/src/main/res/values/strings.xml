@@ -15,6 +15,7 @@
     <string name="menber">Menbers:%1$d</string>
     <string name="owner">Owner:%1$s</string>
     <string name="getting_follow_user_now">Follow user getting now......</string>
+    <string name="getting_follower_user_now">Follower user getting now......</string>
     <string name="getting_list_user_now">List user getting now......</string>
     <string name="getting_list_now">List getting now......</string>
     <string name="getting_list_user_more_now">Retrieving users for %1$d users \n %2$d being added to the list ......</string>
@@ -36,9 +37,13 @@
     <string name="welcome" translatable="false">Welcome to Noriotter2</string>
     <string name="welcome_info">Welcome to Noriotter \n To use this application, you first need to link with Twitter and log in.</string>
     <string name="now_hint">NANISITEN?</string>
-    <string name="follow">%1$d Following</string>
-    <string name="follower">%1$d Followers</string>
+    <string name="follow_count">%1$d Following</string>
+    <string name="follower_count">%1$d Followers</string>
     <string name="start_noriotter">Start Noriotter2 !!</string>
     <string name="tweets">Tweets</string>
     <string name="users">Users</string>
+    <string name="follow">Follow</string>
+    <string name="follower">Follower</string>
+    <string name="mention">Mention</string>
+    <string name="like">Like</string>
 </resources>
