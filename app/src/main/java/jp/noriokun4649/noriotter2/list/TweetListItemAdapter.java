@@ -108,7 +108,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
             TextView quitScreanname = view.findViewById(R.id.quit_screanname);
             quitText.setText(useredata.getQuitText());
             quitName.setText(useredata.getQuitName());
-            quitScreanname.setText("@" + useredata.getQuitScreenName());
+            quitScreanname.setText(useredata.getQuitScreenName());
             if (useredata.getQuitMedias() != null) {
                 ConstraintLayout quitImageLayout = view.findViewById(R.id.quit_image_layout);
                 quitImageLayout.setVisibility(View.VISIBLE);
@@ -130,7 +130,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
         textView35.setTextColor(useredata.isMeFav() ? Color.RED : Color.BLACK);
         textView36.setText("{gmd-share}");
         textView36.setOnClickListener(clickListener);
-        textView.setText("@" + useredata.getScreanname());
+        textView.setText(useredata.getScreanname());
         textView6.setText(useredata.getName());
         textView7.setText(useredata.getTwiite());
         textView8.setText(Html.fromHtml(useredata.getSource()));

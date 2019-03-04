@@ -1,5 +1,6 @@
 package jp.noriokun4649.noriotter2.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,7 +48,7 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
         twitterConnect.login();
         AsyncTwitter asyncTwitter = twitterConnect.getmTwitter();
         GetUserProfile userProfile = new GetUserProfile(this, asyncTwitter, this);
-        userProfile.getUserProfile("@" + id);
+        userProfile.getUserProfile(id);
         IconicsDrawable gmdBack = new IconicsDrawable(this,
                 GoogleMaterial.Icon.gmd_arrow_back).sizeDp(30).paddingDp(6).color(Color.WHITE).backgroundColor(Color.argb(140, 0, 0, 0)).roundedCornersDp(15);
         toolbar = findViewById(R.id.toolbar2);
@@ -63,7 +64,7 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
     @Override
     public void callbackFollow(final long[] follow, final User user) {
         had.post(() -> {
-            ImageView imageIcon = findViewById(R.id.imageIcon);
+            ImageView imageIcon = findViewById(R.id.image_icon);
             ImageView imageheder = findViewById(R.id.imageheder);
             TextView textName = findViewById(R.id.textName);
             TextView textScreenName = findViewById(R.id.textScreenName);

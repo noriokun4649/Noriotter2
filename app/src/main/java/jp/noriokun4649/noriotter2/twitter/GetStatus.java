@@ -173,7 +173,7 @@ public class GetStatus {
             useredata.setLock(isLock);
             useredata.setOfficial(isOfficial);
             useredata.setTweetid(tweetid);
-            useredata.setScreanname(screanname);
+            useredata.setScreanname("@" + screanname);
             useredata.setName(name);
             useredata.setLocation(result.toString());  // userLoc;
             useredata.setTwiite(text);
