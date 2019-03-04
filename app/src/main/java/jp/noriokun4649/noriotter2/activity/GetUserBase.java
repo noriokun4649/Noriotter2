@@ -4,11 +4,10 @@
 
 package jp.noriokun4649.noriotter2.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,14 +15,17 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsLayoutInflater2;
 
+import java.util.ArrayList;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.LayoutInflaterCompat;
-import io.realm.Realm;
-import io.realm.RealmAsyncTask;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.dialogfragment.DialogsListener;
+import jp.noriokun4649.noriotter2.list.UserList;
+import jp.noriokun4649.noriotter2.list.UserListItemAdapter;
 import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 import twitter4j.AsyncTwitter;
 
@@ -33,76 +35,53 @@ import twitter4j.AsyncTwitter;
  */
 abstract class GetUserBase extends AppCompatActivity
         implements DialogsListener {
-
-    /**
-     * ダイアログのタイトルリストです.
-     */
-    private String[] a;
-
-    /**
-     * サークルリストのリストViewのアダプタでしゅ.
-     */
-    //private CircleListItemAdapter adapter;
-
-    /**
-     * Realmデータベースのインスタンス.
-     */
-    private Realm realm;
-
-    /**
-     * Realmの非同期処理タスク.
-     */
-    private RealmAsyncTask realmAsyncTask;
+    protected long userId;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         LayoutInflaterCompat.setFactory2(getLayoutInflater(), new IconicsLayoutInflater2(getDelegate()));
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.import_layout);
-        Intent intent = getIntent();
-        int counts = intent.getIntExtra("count", 0);
-        long id = intent.getLongExtra("listId", 0);
+        setContentView(R.layout.user_list_layout);
+        getWindow().setSharedElementsUseOverlay(true);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        userId = getIntent().getLongExtra("user_id", 0L);
+        LinearLayout linearLayout = findViewById(R.id.progress);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        //toolbar.setTitle(getTitles());
+        toolbar.setTitle(getTitles());
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setNavigationIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).sizeDp(16).color(Color.WHITE));
         toolbar.setNavigationOnClickListener(v -> finish());
-        realm = Realm.getDefaultInstance();
         TextView textView = findViewById(R.id.textView4);
         textView.setText(getLoadingText());
         final ListView listView = findViewById(R.id.follow_import_list);
-        //final ArrayList<Circle> circles = new ArrayList<>();
-        //adapter = new CircleListItemAdapter(this, circles);
+        final ArrayList<UserList> circles = new ArrayList<>();
+        UserListItemAdapter adapter = new UserListItemAdapter(this, circles);
         TwitterConnect twitterConnect = new TwitterConnect(this);
         twitterConnect.login();
         final AsyncTwitter asyncTwitter = twitterConnect.getmTwitter();
-        getListData(asyncTwitter, /*adapter,*/ counts, id);
-        //listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+        getListData(asyncTwitter, adapter);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener((parent, view, position, ids) -> {
 
-            }
         });
+        listView.setEmptyView(linearLayout);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
 
-
-// @param adapters     リストViewのアダプタ
 
     /**
      * リストViewのアダプタにサークル情報を入れる処理をするメソッド.
      *
      * @param asyncTwitter Twitterの非同期処理Twitterから情報を得る際にのみ使用する
-     * @param counts       TwitterのListから取得時のみ使用するカウント
-     * @param id           TwitterのListから取得時のみ使用するListのID
+     * @param adapters     リストViewのアダプタ
      */
-    abstract void getListData(AsyncTwitter asyncTwitter, /* CircleListItemAdapter adapters,*/ int counts, long id);
+    abstract void getListData(AsyncTwitter asyncTwitter, UserListItemAdapter adapters);
 
     /**
      * ToolBarのタイトルを設定する(例：R.string.follow_import).

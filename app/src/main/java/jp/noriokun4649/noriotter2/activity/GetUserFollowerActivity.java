@@ -1,36 +1,30 @@
-/*
- * Copyright (c) 2018 noriokun4649.
- */
-
 package jp.noriokun4649.noriotter2.activity;
 
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.list.UserListItemAdapter;
-import jp.noriokun4649.noriotter2.twitter.GetFollow;
+import jp.noriokun4649.noriotter2.twitter.GetFollower;
 import twitter4j.AsyncTwitter;
 
-/**
- * フォローからインポートする際のアクティビティです.
- */
-public class GetUserFollowActivity extends GetUserBase {
+public class GetUserFollowerActivity extends GetUserBase {
+
     @Override
     void getListData(final AsyncTwitter asyncTwitter, final UserListItemAdapter adapter) {
-        GetFollow getFollow = new GetFollow(this, asyncTwitter, adapter);
+        GetFollower getFollower = new GetFollower(this, asyncTwitter, adapter);
         if (userId == 0L) {
-            getFollow.getFollow();
+            getFollower.getFollower();
         } else {
-            getFollow.getFollow(userId);
+            getFollower.getFollower(userId);
         }
     }
 
     @Override
     int getTitles() {
-        return R.string.follow;
+        return R.string.follower;
     }
 
     @Override
     int getLoadingText() {
-        return R.string.getting_follow_user_now;
+        return R.string.getting_follower_user_now;
     }
 
     @Override

@@ -89,8 +89,18 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
                 textUrl.setVisibility(View.VISIBLE);
                 textUrl.setText(user.getURLEntity().getExpandedURL());
             }
-            textFollow.setText(String.valueOf(user.getFriendsCount()) + "フォロー");
-            textFollower.setText(String.valueOf(user.getFollowersCount()) + "フォロワー");
+            textFollow.setText(getString(R.string.follow_count, user.getFriendsCount()));
+            textFollower.setText(getString(R.string.follow_count, user.getFollowersCount()));
+            textFollow.setOnClickListener((v -> {
+                Intent intent = new Intent(UserPageActivity.this, GetUserFollowActivity.class);
+                intent.putExtra("user_id", user.getId());
+                startActivity(intent);
+            }));
+            textFollower.setOnClickListener((v -> {
+                Intent intent = new Intent(UserPageActivity.this, GetUserFollowerActivity.class);
+                intent.putExtra("user_id", user.getId());
+                startActivity(intent);
+            }));
             textStartDay.setText(new SimpleDateFormat("yyyy年MM月dd日").format(user.getCreatedAt()));
             //toolbar.setTitle(user.getName()+user.getStatusesCount()+"ツイート");
         });

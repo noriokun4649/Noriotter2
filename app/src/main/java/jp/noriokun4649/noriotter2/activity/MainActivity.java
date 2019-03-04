@@ -193,8 +193,10 @@ public class MainActivity extends AppCompatActivity
             MyGlideApp.with(getApplicationContext()).load(user.get400x400ProfileImageURLHttps()).circleCrop().into(image);
             screenName.setText(user.getScreenName());
             userName.setText(user.getName());
-            followCount.setText(getString(R.string.follow, user.getFriendsCount()));
-            followerCount.setText(getString(R.string.follower, user.getFollowersCount()));
+            followCount.setText(getString(R.string.follow_count, user.getFriendsCount()));
+            followerCount.setText(getString(R.string.follower_count, user.getFollowersCount()));
+            followCount.setOnClickListener((v -> startActivity(new Intent(MainActivity.this, GetUserFollowActivity.class))));
+            followerCount.setOnClickListener((v -> startActivity(new Intent(MainActivity.this, GetUserFollowerActivity.class))));
         });
     }
 
