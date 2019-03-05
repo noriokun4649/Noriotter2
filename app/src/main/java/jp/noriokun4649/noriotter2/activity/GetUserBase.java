@@ -4,6 +4,7 @@
 
 package jp.noriokun4649.noriotter2.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -64,7 +65,10 @@ abstract class GetUserBase extends AppCompatActivity
         getListData(asyncTwitter, adapter);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener((parent, view, position, ids) -> {
-
+            UserList list =circles.get(position);
+            Intent intent = new Intent(GetUserBase.this, UserPageActivity.class);
+            intent.putExtra("userid", list.getUserScreenName());
+            startActivity(intent);
         });
         listView.setEmptyView(linearLayout);
     }
