@@ -154,6 +154,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_list) {
             startActivity(new Intent(MainActivity.this, ListListActivity.class));
+        } else if (id == R.id.nav_profile) {
+            Intent intent = new Intent(MainActivity.this, UserPageActivity.class);
+            intent.putExtra("userid", PreferenceManager.getDefaultSharedPreferences(this).getString("scren_name", ""));
+            startActivity(intent);
         }
 /*
         if (id == R.id.nav_camera) {
