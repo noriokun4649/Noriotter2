@@ -6,6 +6,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +29,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import jp.noriokun4649.noriotter2.R;
+import jp.noriokun4649.noriotter2.activity.UserPageActivity;
 import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -106,7 +113,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
             TextView quitText = view.findViewById(R.id.quit_text);
             TextView quitName = view.findViewById(R.id.quit_name);
             TextView quitScreanname = view.findViewById(R.id.quit_screanname);
-            quitText.setText(useredata.getQuitText());
+            setLinks(quitText, useredata.getQuitText());
             quitName.setText(useredata.getQuitName());
             quitScreanname.setText(useredata.getQuitScreenName());
             if (useredata.getQuitMedias() != null) {
@@ -132,7 +139,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
         textView36.setOnClickListener(clickListener);
         textView.setText(useredata.getScreanname());
         textView6.setText(useredata.getName());
-        textView7.setText(useredata.getTwiite());
+        setLinks(textView7, useredata.getTwiite());
         textView8.setText(Html.fromHtml(useredata.getSource()));
         textView8.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +148,6 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
                 final Pattern urlPattern = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
                 final Matcher matcher = urlPattern.matcher(useredata.getSource());
                 while (matcher.find()) {
-                    System.out.println(matcher.group());
                     Uri uri = Uri.parse(matcher.group());
                     Intent i = new Intent(Intent.ACTION_VIEW, uri);
                     context.startActivity(i);
@@ -165,6 +171,20 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
         //MyGlideApp.with(view).load(uri).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView8);
 
         return view;
+    }
+
+    private void setLinks(final TextView textView, final String tweetText) {
+        Spannable tweet = new SpannableString(tweetText);
+        Matcher matcherUser = Pattern.compile("@([A-Za-z0-9_-]+)").matcher(tweetText);
+        while (matcherUser.find()) {
+            tweet.setSpan(new GetUserSpan(matcherUser.group(1)), matcherUser.start(), matcherUser.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        Matcher matcherHash = Pattern.compile("#(w*[一-龠_ぁ-ん_ァ-ヴーａ-ｚＡ-Ｚa-zA-Z0-9]+|[a-zA-Z0-9_]+|[a-zA-Z0-9_]w*)").matcher(tweetText);
+        while (matcherHash.find()) {
+            tweet.setSpan(new GetHashSpan(matcherHash.group()), matcherHash.start(), matcherHash.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        textView.setText(tweet);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void mediaTweet(final View.OnClickListener clickListener, final String[] media,
@@ -212,6 +232,34 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
                 default:
                     constraintLayout.setVisibility(View.GONE);
             }
+        }
+    }
+
+    private class GetUserSpan extends ClickableSpan {
+        private String user;
+
+        GetUserSpan(String user) {
+            this.user = user;
+        }
+
+        @Override
+        public void onClick(@NonNull final View widget) {
+            Intent intent = new Intent(context, UserPageActivity.class);
+            intent.putExtra("userid", user);
+            context.startActivity(intent);
+        }
+    }
+
+    private class GetHashSpan extends ClickableSpan {
+        private String tag;
+
+        GetHashSpan(String tag) {
+            this.tag = tag;
+        }
+
+        @Override
+        public void onClick(@NonNull final View widget) {
+            //検索Activity起動－＞今後実装
         }
     }
 
