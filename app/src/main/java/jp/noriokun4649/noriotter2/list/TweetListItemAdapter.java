@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import jp.noriokun4649.noriotter2.R;
+import jp.noriokun4649.noriotter2.activity.SearchActivity;
 import jp.noriokun4649.noriotter2.activity.UserPageActivity;
 import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 
