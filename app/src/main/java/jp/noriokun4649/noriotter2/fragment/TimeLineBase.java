@@ -2,9 +2,11 @@ package jp.noriokun4649.noriotter2.fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,8 +94,12 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
         });
 
         //getTimeLine.getTimeLine();
-        getFastLoad();
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean loginFlag = sharedPreferences.getBoolean("flag", false);
+        if (loginFlag) {
+            getFastLoad();
+        }
         tweetButton.setOnClickListener(v -> {
             String text = edtext.getText().toString();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
