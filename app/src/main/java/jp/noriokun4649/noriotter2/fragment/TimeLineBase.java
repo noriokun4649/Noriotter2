@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -41,6 +43,7 @@ import jp.noriokun4649.noriotter2.twitter.TimeLineTwetterAdapter;
 import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 import twitter4j.AsyncTwitter;
 import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.User;
 
 abstract public class TimeLineBase extends Fragment implements ICallBack, StatusCallBack {
@@ -55,6 +58,27 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
     private TweetList tweetList;
     private ListView listView;
     private boolean flag = false;
+    private ConstraintLayout constraintLayout;
+    private LinearLayout quit;
+    private TextView quitName;
+    private TextView quitScreenname;
+    private TextView quitText;
+    private TextView textMode;
+    private BootstrapButton tweetButton;
+    private EditText edtext;
+
+    private View.OnClickListener onClickListener = v -> {
+        String text = edtext.getText().toString();
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //if (media == null) {
+        asyncTwitter.updateStatus(text);
+                /*
+            } else {
+                asyncTwitter.updateStatus(new StatusUpdate(string).media(media));
+                media = null;
+            }*/
+        edtext.setText("");
+    };
 
     @Nullable
     @Override
@@ -70,19 +94,25 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
         listView.setAdapter(tweetListItemAdapter);
         asyncTwitter = twitterConnect.getmTwitter();
         asyncTwitter.addListener(new TimeLineTwetterAdapter(this, asyncTwitter));
-        final EditText edtext = view.findViewById(R.id.text);
+        edtext = view.findViewById(R.id.text);
+        BootstrapButton button_close = view.findViewById(R.id.button_close);
         BootstrapButton imageButton = view.findViewById(R.id.image_button);
-        BootstrapButton tweetButton = view.findViewById(R.id.tweet_button);
-        //GetTimeLine getTimeLine = new GetTimeLine(getActivity(), asyncTwitter, tweetListItemAdapter, this);
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (arrayList.size() > 0) {
-                    //getTimeLine.getFutureTimeLine(arrayList.get(arrayList.size() - 1).getTweetid());
-                    getFutureLoad(arrayList.get(arrayList.size() - 1).getTweetid());
-                }
+        tweetButton = view.findViewById(R.id.tweet_button);
+        constraintLayout = view.findViewById(R.id.constraintLayout);
+        quit = view.findViewById(R.id.quit_line);
+        quitName = view.findViewById(R.id.quit_name);
+        quitScreenname = view.findViewById(R.id.quit_screanname);
+        quitText = view.findViewById(R.id.quit_text);
+        textMode = view.findViewById(R.id.textMode);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (arrayList.size() > 0) {
+                getFutureLoad(arrayList.get(arrayList.size() - 1).getTweetid());
             }
+        });
+        button_close.setOnClickListener(v -> {
+            constraintLayout.setVisibility(View.GONE);
+            quit.setVisibility(View.GONE);
+            tweetButton.setOnClickListener(onClickListener);
         });
         swipeRefreshLayout.setRefreshing(true);
         actionButton = view.findViewById(R.id.floatingActionButton);
@@ -92,33 +122,18 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
         actionButton.setOnClickListener(v -> {
             listView.smoothScrollToPosition(0);
         });
-
-        //getTimeLine.getTimeLine();
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean loginFlag = sharedPreferences.getBoolean("flag", false);
         if (loginFlag) {
             getFastLoad();
         }
-        tweetButton.setOnClickListener(v -> {
-            String text = edtext.getText().toString();
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            //if (media == null) {
-            asyncTwitter.updateStatus(text);
-                /*
-            } else {
-                asyncTwitter.updateStatus(new StatusUpdate(string).media(media));
-                media = null;
-            }*/
-            edtext.setText("");
-        });
+        tweetButton.setOnClickListener(onClickListener);
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(final AbsListView view, final int scrollState) {
                 if (listView.getLastVisiblePosition() == (tweetListItemAdapter.getCount() - 1) && !flag) {
                     swipeRefreshLayout.setRefreshing(true);
-                    //getTimeLine.getOldTimeLine(arrayList.get(0).getTweetid());
                     getOldLoad(arrayList.get(0).getTweetid());
                     flag = true;
                 }
@@ -161,6 +176,20 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
                         openMediaActivity(view, 3, "image3", tweetList.getQuitMedias());
                         break;
                     case R.id.textView33:
+                        textMode.setText(R.string.reply);
+                        constraintLayout.setVisibility(View.VISIBLE);
+                        quit.setVisibility(View.VISIBLE);
+                        quitName.setText(tweetList.getName());
+                        quitScreenname.setText(tweetList.getScreanname());
+                        quitText.setText(tweetList.getTwiite());
+                        tweetButton.setOnClickListener(v -> {
+                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                            asyncTwitter.updateStatus(new StatusUpdate(tweetList.getScreanname() + " " + edtext.getText()).inReplyToStatusId(tweetList.getTweetid()));
+                            edtext.setText("");
+                            constraintLayout.setVisibility(View.GONE);
+                            quit.setVisibility(View.GONE);
+                            tweetButton.setOnClickListener(onClickListener);
+                        });
                             /*
                             LayoutInflater factory = LayoutInflater.from(getContext());
                             final View inputView = factory.inflate(R.layout.reply, null);
@@ -182,12 +211,6 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
                         break;
                     case R.id.textView36:
                         break;
-                    /* case R.id.videoView:
-                        Intent intent = new Intent(getActivity(), MediaActivity.class);
-                        intent.putExtra("urls", tweetList.getMedias());
-                        intent.putExtra("index", 0);
-                        startActivity(intent);
-                        break; */
                     case R.id.imageView8:
                         Intent intent = new Intent(getActivity(), UserPageActivity.class);
                         intent.putExtra("userid", tweetList.getScreanname());
@@ -230,7 +253,7 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
                     if (!isRetweeted) {
                         AlertDialog.Builder ab = new AlertDialog.Builder(topView.getContext());
                         ab.setTitle(status.getText());
-                        String[] items = {"りついーと", "いんようついーと"};
+                        String[] items = {getString(R.string.retweet), getString(R.string.quit_tweet)};
                         ab.setPositiveButton("閉じる", null);
                         ab.setItems(items, new DialogInterface.OnClickListener() {
                             @Override
@@ -242,24 +265,22 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
                                         tweetList.setMeRt(true);
                                         tweetList.setRtcount(tweetList.getRtcount() + 1);
                                         break;
-                                    case 1:/*
-                                            LayoutInflater factorys = LayoutInflater.from(getContext());
-                                            final View inputViews = factorys.inflate(R.layout.reply, null);
-                                            final AlertDialog.Builder ass = new AlertDialog.Builder(getContext());
-                                            final AlertDialog alertDialogs = ass.create();
-                                            alertDialogs.setView(inputViews);
-                                            final EditText ets = (EditText) inputViews.findViewById(R.id.editText7);
-                                            Button ast = (Button) inputViews.findViewById(R.id.button12);
-                                            ast.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    String input = ets.getText().toString();
-                                                    asyncTwitter.updateStatus(input + " https://twitter.com/" + useredata.name + "/status/" + useredata.tweetid);
-                                                    alertDialogs.dismiss();
-                                                }
-                                            });
-                                            alertDialogs.show();
-                                            */
+                                    case 1:
+                                        textMode.setText(R.string.quit_tweet);
+                                        constraintLayout.setVisibility(View.VISIBLE);
+                                        quit.setVisibility(View.VISIBLE);
+                                        quitName.setText(tweetList.getName());
+                                        quitScreenname.setText(tweetList.getScreanname());
+                                        quitText.setText(tweetList.getTwiite());
+                                        tweetButton.setOnClickListener(v -> {
+                                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                                            asyncTwitter.updateStatus(edtext.getText() + "\nhttps://twitter.com/"
+                                                    + tweetList.getScreanname().replace("@", "") + "/status/" + tweetList.getTweetid());
+                                            edtext.setText("");
+                                            constraintLayout.setVisibility(View.GONE);
+                                            quit.setVisibility(View.GONE);
+                                            tweetButton.setOnClickListener(onClickListener);
+                                        });
                                         break;
                                     default:
                                 }
@@ -268,7 +289,6 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
                         });
                         ab.show();
                     } else {
-                        //asyncTwitter
                         asyncTwitter.unretweetStatus(status.getId());
                         tweetList.setMeRt(false);
                         rtText.setTextColor(Color.BLACK);
