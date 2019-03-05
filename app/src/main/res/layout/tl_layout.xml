@@ -30,7 +30,8 @@
         <ListView
             android:id="@+id/time_line"
             android:layout_width="0dp"
-            android:layout_height="0dp" />
+            android:layout_height="0dp"
+            android:nestedScrollingEnabled="true"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
