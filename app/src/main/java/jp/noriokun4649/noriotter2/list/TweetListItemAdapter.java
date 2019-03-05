@@ -259,7 +259,9 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
 
         @Override
         public void onClick(@NonNull final View widget) {
-            //検索Activity起動－＞今後実装
+            Intent intent = new Intent(context, SearchActivity.class);
+            intent.putExtra("tag", tag);
+            context.startActivity(intent);
         }
     }
 
