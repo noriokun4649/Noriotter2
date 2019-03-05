@@ -10,7 +10,7 @@ public class UserLike extends TimeLineBase {
     @Override
     public void getFastLoad() {
         id = getArguments().getLong("user_id");
-        getFavorit = new GetUserLike(getActivity(), asyncTwitter, tweetListItemAdapter, this);
+        getFavorit = new GetUserLike(getActivity(), getAsyncTwitter(), getTweetListItemAdapter(), this);
         getFavorit.getFavorites(id);
     }
 

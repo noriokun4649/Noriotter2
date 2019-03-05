@@ -7,7 +7,7 @@ public class TimeLine extends TimeLineBase {
 
     @Override
     public void getFastLoad() {
-        getTimeLine = new GetTimeLine(getActivity(), asyncTwitter, tweetListItemAdapter, this);
+        getTimeLine = new GetTimeLine(getActivity(), getAsyncTwitter(), getTweetListItemAdapter(), this);
         getTimeLine.getTimeLine();
     }
 

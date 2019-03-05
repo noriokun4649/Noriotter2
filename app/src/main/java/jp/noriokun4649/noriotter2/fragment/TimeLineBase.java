@@ -44,11 +44,11 @@ import twitter4j.Status;
 import twitter4j.User;
 
 abstract public class TimeLineBase extends Fragment implements ICallBack, StatusCallBack {
-    protected TweetListItemAdapter tweetListItemAdapter;
-    protected TwitterConnect twitterConnect;
-    protected SwipeRefreshLayout swipeRefreshLayout;
-    protected AsyncTwitter asyncTwitter;
-    protected FloatingActionButton actionButton;
+    private TweetListItemAdapter tweetListItemAdapter;
+    private TwitterConnect twitterConnect;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private AsyncTwitter asyncTwitter;
+    private FloatingActionButton actionButton;
     private Handler mHandler = new Handler();
     private ArrayList<TweetList> arrayList;
     private View topView;
@@ -306,4 +306,49 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
     public abstract void getFutureLoad(long index);
 
     public abstract void getOldLoad(long index);
+
+    /**
+     * Gets tweetListItemAdapter .
+     *
+     * @return value of tweetListItemAdapter
+     */
+    protected TweetListItemAdapter getTweetListItemAdapter() {
+        return tweetListItemAdapter;
+    }
+
+    /**
+     * Gets asyncTwitter .
+     *
+     * @return value of asyncTwitter
+     */
+    public AsyncTwitter getAsyncTwitter() {
+        return asyncTwitter;
+    }
+
+    /**
+     * Gets twitterConnect .
+     *
+     * @return value of twitterConnect
+     */
+    public TwitterConnect getTwitterConnect() {
+        return twitterConnect;
+    }
+
+    /**
+     * Gets swipeRefreshLayout .
+     *
+     * @return value of swipeRefreshLayout
+     */
+    public SwipeRefreshLayout getSwipeRefreshLayout() {
+        return swipeRefreshLayout;
+    }
+
+    /**
+     * Gets actionButton .
+     *
+     * @return value of actionButton
+     */
+    public FloatingActionButton getActionButton() {
+        return actionButton;
+    }
 }

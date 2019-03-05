@@ -54,7 +54,7 @@ public class RealTimeLine extends TimeLineBase implements StatusCallBack, ICallB
         @Override
         public void onStatus(final Status status) {
             handler.post(() -> {
-                getStatus.getStatus(status, asyncTwitter, tweetListItemAdapter, getActivity(), false);
+                getStatus.getStatus(status, getAsyncTwitter(), getTweetListItemAdapter(), getActivity(), false);
                 //new GetStatus(status,asyncTwitter,  tweetListItemAdapter ,getActivity(),RealTimeLine.this,follow);
             });
         }
@@ -70,17 +70,17 @@ public class RealTimeLine extends TimeLineBase implements StatusCallBack, ICallB
 
     @Override
     public void getFastLoad() {
-        swipeRefreshLayout.setRefreshing(false);
-        Configuration configuration = twitterConnect.getConfiguration();
+        getSwipeRefreshLayout().setRefreshing(false);
+        Configuration configuration = getTwitterConnect().getConfiguration();
         if (configuration != null) {
             twitterStream = new TwitterStreamFactory(configuration).getInstance();
             twitterStream.addListener(userStreamAdapter);
         }
         IconicsDrawable gmdAuto = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_autorenew);
-        actionButton.setImageDrawable(gmdAuto);
-        actionButton.setVisibility(View.VISIBLE);
-        actionButton.setOnClickListener(v -> {
-            asyncTwitter.getFriendsIDs(-1);
+        getActionButton().setImageDrawable(gmdAuto);
+        getActionButton().setVisibility(View.VISIBLE);
+        getActionButton().setOnClickListener(v -> {
+            getAsyncTwitter().getFriendsIDs(-1);
             Toast.makeText(getContext(), "Stream接続開始", Toast.LENGTH_LONG).show();
         });
     }

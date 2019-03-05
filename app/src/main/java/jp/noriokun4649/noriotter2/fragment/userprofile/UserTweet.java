@@ -10,7 +10,7 @@ public class UserTweet extends TimeLineBase {
     @Override
     public void getFastLoad() {
         id = getArguments().getLong("user_id");
-        getTimeLine = new GetUserTimeLine(getActivity(), asyncTwitter, tweetListItemAdapter, this);
+        getTimeLine = new GetUserTimeLine(getActivity(), getAsyncTwitter(), getTweetListItemAdapter(), this);
         getTimeLine.getUserTimeLine(id);
     }
 

@@ -10,7 +10,7 @@ public class TweetList extends TimeLineBase {
     @Override
     public void getFastLoad() {
         listId = getArguments().getLong("list_id");
-        getListTweetTL = new GetListTweetTL(getActivity(), asyncTwitter, tweetListItemAdapter, this);
+        getListTweetTL = new GetListTweetTL(getActivity(), getAsyncTwitter(), getTweetListItemAdapter(), this);
         getListTweetTL.getListStatuses(listId);
     }
 
