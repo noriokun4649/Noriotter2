@@ -21,7 +21,6 @@ import jp.noriokun4649.noriotter2.list.TweetListItemAdapter;
 import twitter4j.AsyncTwitter;
 import twitter4j.GeoLocation;
 import twitter4j.MediaEntity;
-import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.URLEntity;
 
@@ -36,7 +35,7 @@ public class GetStatus {
         //getStatus(status, asyncTwitterd, adapter, context, mode);
     }
 
-    public GetStatus(final ResponseList<Status> statuses, final AsyncTwitter asyncTwitterd,
+    public GetStatus(final List<Status> statuses, final AsyncTwitter asyncTwitterd,
                      final TweetListItemAdapter adapter, final Activity context, final ICallBack callBack,
                      final boolean addMode) {
         this.addMode = addMode;
