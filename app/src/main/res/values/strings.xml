@@ -46,4 +46,8 @@
     <string name="follower">Follower</string>
     <string name="mention">Mention</string>
     <string name="like">Like</string>
+    <string name="getting_user_now">User search now</string>
+    <string name="retweet">Retweet</string>
+    <string name="quit_tweet">Quit Tweet</string>
+    <string name="reply">Reply</string>
 </resources>

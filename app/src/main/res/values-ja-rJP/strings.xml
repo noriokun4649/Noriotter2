@@ -43,4 +43,8 @@
     <string name="follower">フォロワー</string>
     <string name="mention">返信</string>
     <string name="like">いいね</string>
+    <string name="getting_user_now">ユーザーを検索中</string>
+    <string name="reply">返信</string>
+    <string name="quit_tweet">引用ツイート</string>
+    <string name="retweet">リツイート</string>
 </resources>
