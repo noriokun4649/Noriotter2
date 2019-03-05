@@ -158,6 +158,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, UserPageActivity.class);
             intent.putExtra("userid", PreferenceManager.getDefaultSharedPreferences(this).getString("scren_name", ""));
             startActivity(intent);
+        } else if (id == R.id.nav_search) {
+            startActivity(new Intent(MainActivity.this, SearchActivity.class));
         }
 /*
         if (id == R.id.nav_camera) {
