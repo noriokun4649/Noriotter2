@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, HelloActivity.class));
         } else {
             AsyncTwitter asyncTwitter = twitterConnect.getmTwitter();
-            asyncTwitter.getAccountSettings();
             asyncTwitter.addListener(new TimeLineTwetterAdapter(this, asyncTwitter));
             asyncTwitter.getAccountSettings();
         }
@@ -184,6 +183,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void callbackFollow(final long[] follow, final User user) {
         mHandler.post(() -> {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            sharedPreferences.edit().putString("scren_name", user.getScreenName()).apply();
             ImageView image = findViewById(R.id.imageView);
             TextView screenName = findViewById(R.id.screen_name);
             TextView userName = findViewById(R.id.user_name);
