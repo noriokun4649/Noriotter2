@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -13,6 +14,7 @@ import com.beardedhen.androidbootstrap.BootstrapText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 
@@ -27,6 +29,10 @@ public class HelloActivity extends AppCompatActivity {
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hellow_layout);
+        getWindow().setSharedElementsUseOverlay(true);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         button = findViewById(R.id.button);
         button.setOnClickListener(v -> {
             twitterConnect.login();
