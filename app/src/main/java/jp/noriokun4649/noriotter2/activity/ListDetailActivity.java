@@ -26,6 +26,7 @@ public class ListDetailActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private long listId;
+    private int count;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class ListDetailActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         listId = getIntent().getLongExtra("list_id", 0);
+        count = getIntent().getIntExtra("list_count", 0);
         IconicsDrawable gmdBack = new IconicsDrawable(this,
                 GoogleMaterial.Icon.gmd_arrow_back).sizeDp(30).paddingDp(6).color(Color.WHITE).backgroundColor(Color.argb(140, 0, 0, 0)).roundedCornersDp(15);
         Toolbar toolbar = findViewById(R.id.toolbar4);
@@ -59,6 +61,7 @@ public class ListDetailActivity extends AppCompatActivity {
         public Fragment getItem(final int position) {
             Bundle bundle = new Bundle();
             bundle.putLong("list_id", listId);
+            bundle.putInt("list_count", count);
             switch (position) {
                 case 1:
                     UsersList usersList = new UsersList();

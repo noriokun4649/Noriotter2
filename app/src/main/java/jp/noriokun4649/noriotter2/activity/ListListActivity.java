@@ -89,8 +89,6 @@ public class ListListActivity extends AppCompatActivity {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        final ListView layout = findViewById(R.id.list_import_list);
-
                     }
                 });
                 super.onException(te, method);
