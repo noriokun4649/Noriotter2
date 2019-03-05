@@ -124,7 +124,7 @@ public class GetStatus {
         String movieThumbnail = null;
         String quitMovieThumbnail = null;
 
-        if (statusMain.getQuotedStatus() != null) {
+        if (statusMain.getQuotedStatus() != null && statusMain.getQuotedStatusPermalink() != null) {
             isQuit = true;
             text = text.replace(statusMain.getQuotedStatusPermalink().getURL(), "");
             quitText = statusMain.getQuotedStatus().getText();
