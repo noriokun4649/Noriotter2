@@ -10,8 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.iconics.context.IconicsLayoutInflater2;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 
@@ -19,7 +23,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.LayoutInflaterCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import jp.noriokun4649.noriotter2.R;
+import jp.noriokun4649.noriotter2.fragment.userprofile.UserLike;
+import jp.noriokun4649.noriotter2.fragment.userprofile.UserTweet;
 import jp.noriokun4649.noriotter2.glide.MyGlideApp;
 import jp.noriokun4649.noriotter2.twitter.GetUserProfile;
 import jp.noriokun4649.noriotter2.twitter.StatusCallBack;
@@ -36,9 +47,13 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
      */
     private TwitterConnect twitterConnect = new TwitterConnect(this);
     private Toolbar toolbar;
+    private long userId;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        LayoutInflaterCompat.setFactory2(getLayoutInflater(), new IconicsLayoutInflater2(getDelegate()));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile_layout);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -64,6 +79,7 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
     @Override
     public void callbackFollow(final long[] follow, final User user) {
         had.post(() -> {
+            userId = user.getId();
             ImageView imageIcon = findViewById(R.id.image_icon);
             ImageView imageheder = findViewById(R.id.imageheder);
             TextView textName = findViewById(R.id.textName);
@@ -104,6 +120,43 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
             }));
             textStartDay.setText(new SimpleDateFormat("yyyy年MM月dd日").format(user.getCreatedAt()));
             //toolbar.setTitle(user.getName()+user.getStatusesCount()+"ツイート");
+
+            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+            mViewPager = findViewById(R.id.viewpager);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+            TabLayout tabLayout = findViewById(R.id.tabs);
+            mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
         });
+    }
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(final FragmentManager fm) {
+            super(fm);
+        }
+
+
+        @NotNull
+        @Override
+        public Fragment getItem(final int position) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("user_id", userId);
+            switch (position) {
+                case 1:
+                    UserLike userLike = new UserLike();
+                    userLike.setArguments(bundle);
+                    return userLike;
+                default:
+                    UserTweet userTweet = new UserTweet();
+                    userTweet.setArguments(bundle);
+                    return userTweet;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
     }
 }
