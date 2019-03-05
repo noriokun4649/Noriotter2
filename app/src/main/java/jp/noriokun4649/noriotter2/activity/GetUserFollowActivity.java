@@ -16,10 +16,10 @@ public class GetUserFollowActivity extends GetUserBase {
     @Override
     void getListData(final AsyncTwitter asyncTwitter, final UserListItemAdapter adapter) {
         GetFollow getFollow = new GetFollow(this, asyncTwitter, adapter);
-        if (userId == 0L) {
+        if (getUserId() == 0L) {
             getFollow.getFollow();
         } else {
-            getFollow.getFollow(userId);
+            getFollow.getFollow(getUserId());
         }
     }
 

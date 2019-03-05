@@ -36,7 +36,7 @@ import twitter4j.AsyncTwitter;
  */
 abstract class GetUserBase extends AppCompatActivity
         implements DialogsListener {
-    protected long userId;
+    private long userId;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ abstract class GetUserBase extends AppCompatActivity
         getListData(asyncTwitter, adapter);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener((parent, view, position, ids) -> {
-            UserList list =circles.get(position);
+            UserList list = circles.get(position);
             Intent intent = new Intent(GetUserBase.this, UserPageActivity.class);
             intent.putExtra("userid", list.getUserScreenName());
             startActivity(intent);
@@ -103,5 +103,14 @@ abstract class GetUserBase extends AppCompatActivity
 
     @Override
     public void onOKClick(final int dialogId, final int position, @Nullable final String returnMemo, final String tag, final String[] items) {
+    }
+
+    /**
+     * Gets userId .
+     *
+     * @return value of userId
+     */
+    public long getUserId() {
+        return userId;
     }
 }

@@ -48,6 +48,7 @@ public class GetFollow {
      *
      * @param contexts     アプリケーションコンテキスト
      * @param asyncTwitter 非同期処理のTwitterインスタンス
+     * @param adapter      　　　リストViewのAdapter
      */
     public GetFollow(final AppCompatActivity contexts, final AsyncTwitter asyncTwitter, final UserListItemAdapter adapter) {
         this.asyncTwitter = asyncTwitter;
@@ -115,6 +116,11 @@ public class GetFollow {
         asyncTwitter.getFriendsIDs(-1L);
     }
 
+    /**
+     * UserIDのフォロー取得.
+     *
+     * @param userid ユーザーID
+     */
     public void getFollow(final long userid) {
         asyncTwitter.addListener(twitterListener);
         asyncTwitter.getFriendsIDs(userid, -1L);

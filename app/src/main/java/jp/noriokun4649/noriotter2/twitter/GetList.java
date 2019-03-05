@@ -55,8 +55,10 @@ public class GetList {
      *
      * @param context      アクティビティのコンテキスト
      * @param asyncTwitter 非同期処理のTwitterインスタンス
+     * @param adapter      リストViewのアダプタ
      * @param listID       取得するListのID
      * @param memberCount  そのListに何人のメンバーがいるかを入れる
+     * @param view         びゅー
      */
     public GetList(final Activity context, final AsyncTwitter asyncTwitter, final UserListItemAdapter adapter, final Long listID,
                    final int memberCount, final View view) {

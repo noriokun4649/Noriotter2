@@ -239,7 +239,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
     private class GetUserSpan extends ClickableSpan {
         private String user;
 
-        GetUserSpan(String user) {
+        GetUserSpan(final String user) {
             this.user = user;
         }
 
@@ -254,7 +254,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
     private class GetHashSpan extends ClickableSpan {
         private String tag;
 
-        GetHashSpan(String tag) {
+        GetHashSpan(final String tag) {
             this.tag = tag;
         }
 

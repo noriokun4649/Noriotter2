@@ -16,6 +16,9 @@ import twitter4j.TwitterListener;
 import twitter4j.TwitterMethod;
 import twitter4j.User;
 
+/**
+ * フォロわーを取得するヘルパークラス.
+ */
 public class GetFollower {
     /**
      * ハンドラー.
@@ -41,6 +44,7 @@ public class GetFollower {
      *
      * @param contexts     アプリケーションコンテキスト
      * @param asyncTwitter 非同期処理のTwitterインスタンス
+     * @param adapter      リストViewのAdapter
      */
     public GetFollower(final AppCompatActivity contexts, final AsyncTwitter asyncTwitter, final UserListItemAdapter adapter) {
         this.asyncTwitter = asyncTwitter;
@@ -108,6 +112,11 @@ public class GetFollower {
         asyncTwitter.getFollowersIDs(-1L);
     }
 
+    /**
+     * フォロワーの取得をする.
+     *
+     * @param userid UserID
+     */
     public void getFollower(final long userid) {
         asyncTwitter.addListener(twitterListener);
         asyncTwitter.getFollowersIDs(userid, -1L);

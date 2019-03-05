@@ -59,10 +59,10 @@ public class SearchActivity extends AppCompatActivity {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String s) {
-                Fragment fragment0 = mSectionsPagerAdapter.findFragmentByPosition(mViewPager,0);
-                Fragment fragment1 = mSectionsPagerAdapter.findFragmentByPosition(mViewPager,1);
+                Fragment fragment0 = mSectionsPagerAdapter.findFragmentByPosition(mViewPager, 0);
+                Fragment fragment1 = mSectionsPagerAdapter.findFragmentByPosition(mViewPager, 1);
                 if (fragment0 instanceof TweetSearch) {
-                    Log.d("aa",s);
+                    Log.d("aa", s);
                     ((TweetSearch) fragment0).getSearch(s);
                 }
                 if (fragment1 instanceof UserSearch) {
@@ -72,7 +72,7 @@ public class SearchActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
+            public boolean onQueryTextChange(final String s) {
                 return false;
             }
         });
@@ -107,8 +107,8 @@ public class SearchActivity extends AppCompatActivity {
             return 2;
         }
 
-        public Fragment findFragmentByPosition(ViewPager viewPager,
-                                               int position) {
+        public Fragment findFragmentByPosition(final ViewPager viewPager,
+                                               final int position) {
             return (Fragment) instantiateItem(viewPager, position);
         }
     }

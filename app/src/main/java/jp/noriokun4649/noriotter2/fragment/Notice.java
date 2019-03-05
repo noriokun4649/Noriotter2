@@ -1,6 +1,18 @@
 package jp.noriokun4649.noriotter2.fragment;
 
-import androidx.fragment.app.Fragment;
+public class Notice extends TimeLineBase {
+    @Override
+    public void getFastLoad() {
+        getSwipeRefreshLayout().setRefreshing(false);
+    }
 
-public class Notice extends Fragment {
+    @Override
+    public void getFutureLoad(final long index) {
+        getSwipeRefreshLayout().setRefreshing(false);
+    }
+
+    @Override
+    public void getOldLoad(final long index) {
+        getSwipeRefreshLayout().setRefreshing(false);
+    }
 }

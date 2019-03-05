@@ -41,7 +41,7 @@ import twitter4j.User;
 
 public class UserPageActivity extends AppCompatActivity implements StatusCallBack {
 
-    Handler had = new Handler();
+    private Handler had = new Handler();
     /**
      * Twitterのインスタンス.
      */

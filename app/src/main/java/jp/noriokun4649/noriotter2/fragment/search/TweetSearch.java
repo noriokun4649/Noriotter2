@@ -27,10 +27,10 @@ public class TweetSearch extends TimeLineBase {
     }
 
     public void getSearch(final String s) {
-            Query query = new Query();
-            query.setCount(20);
-            query.query(s);
-            GetSearch getSearch = new GetSearch(getActivity(), getAsyncTwitter(), getTweetListItemAdapter(), this);
-            getSearch.getSearch(query);
+        Query query = new Query();
+        query.setCount(20);
+        query.query(s);
+        GetSearch getSearch = new GetSearch(getActivity(), getAsyncTwitter(), getTweetListItemAdapter(), this);
+        getSearch.getSearch(query);
     }
 }

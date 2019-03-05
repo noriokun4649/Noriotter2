@@ -46,7 +46,7 @@ import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.User;
 
-abstract public class TimeLineBase extends Fragment implements ICallBack, StatusCallBack {
+public abstract class TimeLineBase extends Fragment implements ICallBack, StatusCallBack {
     private TweetListItemAdapter tweetListItemAdapter;
     private TwitterConnect twitterConnect;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -95,7 +95,7 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
         asyncTwitter = twitterConnect.getmTwitter();
         asyncTwitter.addListener(new TimeLineTwetterAdapter(this, asyncTwitter));
         edtext = view.findViewById(R.id.text);
-        BootstrapButton button_close = view.findViewById(R.id.button_close);
+        BootstrapButton buttonClose = view.findViewById(R.id.button_close);
         BootstrapButton imageButton = view.findViewById(R.id.image_button);
         tweetButton = view.findViewById(R.id.tweet_button);
         constraintLayout = view.findViewById(R.id.constraintLayout);
@@ -109,7 +109,7 @@ abstract public class TimeLineBase extends Fragment implements ICallBack, Status
                 getFutureLoad(arrayList.get(arrayList.size() - 1).getTweetid());
             }
         });
-        button_close.setOnClickListener(v -> {
+        buttonClose.setOnClickListener(v -> {
             constraintLayout.setVisibility(View.GONE);
             quit.setVisibility(View.GONE);
             tweetButton.setOnClickListener(onClickListener);
