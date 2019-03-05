@@ -41,7 +41,6 @@ import twitter4j.TwitterAdapter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterListener;
 import twitter4j.TwitterMethod;
-import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.Configuration;
@@ -78,17 +77,6 @@ public class TwitterConnect implements Serializable {
      * Twitterのリスナー.
      */
     private final TwitterListener mListener = new TwitterAdapter() {
-        @Override
-        public void verifiedCredentials(final User user) {
-            super.verifiedCredentials(user);
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                    sharedPreferences.edit().putString("scren_name", user.getScreenName()).apply();
-                }
-            });
-        }
 
         @Override
         public void gotOAuthRequestToken(final RequestToken token) {
@@ -191,7 +179,6 @@ public class TwitterConnect implements Serializable {
                     e.printStackTrace();
                 }
                 mTwitter.setOAuthAccessToken(new AccessToken(tokens2, tokensSecrets));
-                mTwitter.verifyCredentials();
                 sharedPreferences.edit().putBoolean("flag", true).apply();
             }
         }
