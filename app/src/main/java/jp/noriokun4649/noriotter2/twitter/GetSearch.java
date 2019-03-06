@@ -65,7 +65,8 @@ public class GetSearch {
         asyncTwitter.addListener(twitterListener);
     }
 
-    public void getSearch(final Query query) {
+    public void getSearch(final Query query, final boolean mode) {
+        this.mode = mode;
         asyncTwitter.search(query);
     }
 
