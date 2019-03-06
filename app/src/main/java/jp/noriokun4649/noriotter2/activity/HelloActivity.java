@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.WindowManager;
@@ -11,6 +12,9 @@ import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapText;
+
+import java.io.File;
+import java.io.IOException;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +42,17 @@ public class HelloActivity extends AppCompatActivity {
             twitterConnect.login();
             twitterConnect.signIn(HelloActivity.this);
         });
+
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Pictures/Noriotter2/");
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

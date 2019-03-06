@@ -47,6 +47,10 @@ import twitter4j.StatusUpdate;
 import twitter4j.User;
 
 public abstract class TimeLineBase extends Fragment implements ICallBack, StatusCallBack {
+    /**
+     * インテントコールバック識別用のコード.
+     */
+    private static final int REQUEST_CODE = 1005;
     private TweetListItemAdapter tweetListItemAdapter;
     private TwitterConnect twitterConnect;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -66,7 +70,7 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
     private TextView textMode;
     private BootstrapButton tweetButton;
     private EditText edtext;
-
+    private ArrayList<File> fileArrayList = new ArrayList<>();
     private View.OnClickListener onClickListener = v -> {
         String text = edtext.getText().toString();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -113,6 +117,14 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
             constraintLayout.setVisibility(View.GONE);
             quit.setVisibility(View.GONE);
             tweetButton.setOnClickListener(onClickListener);
+        });
+        imageButton.setOnClickListener(v -> {
+            String[] mimeType = new String[]{"image/*"};
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeType);
+            startActivityForResult(Intent.createChooser(intent, null), REQUEST_CODE);
         });
         swipeRefreshLayout.setRefreshing(true);
         actionButton = view.findViewById(R.id.floatingActionButton);
@@ -273,7 +285,7 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
                                         quitScreenname.setText(tweetList.getScreanname());
                                         quitText.setText(tweetList.getTwiite());
                                         tweetButton.setOnClickListener(v -> {
-                                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                                            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                                             asyncTwitter.updateStatus(edtext.getText() + "\nhttps://twitter.com/"
                                                     + tweetList.getScreanname().replace("@", "") + "/status/" + tweetList.getTweetid());
                                             edtext.setText("");
@@ -314,6 +326,41 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
                 default:
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode,
+                                 final Intent resultData) {
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK && resultData != null && resultData.getData() != null) {
+            Uri uri = resultData.getData();
+            try (Cursor cursor = Objects.requireNonNull(getContext()).getContentResolver().query(uri, null,
+                    null, null, null, null);
+                 InputStream inputStream = getContext().getContentResolver().openInputStream(uri)) {
+                if (cursor != null) {
+                    cursor.moveToFirst();
+                    final String displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    if (isImage(displayName)) {
+                        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Pictures/Noriotter2", displayName);
+                        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                            assert inputStream != null;
+                            IOUtils.copy(inputStream, fileOutputStream);
+                        } catch (AssertionError error) {
+                            error.printStackTrace();
+                        } catch (IOException error) {
+                            error.printStackTrace();
+                        }
+                        fileArrayList.add(file);
+
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private boolean isImage(final String fileName) {
+        return fileName.matches(".*\\.(jpeg|jpg|png|gif)+$");
     }
 
     @Override
