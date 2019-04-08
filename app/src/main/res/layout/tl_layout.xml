@@ -39,7 +39,9 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/backColor"
         android:orientation="horizontal"
+        android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -47,9 +49,10 @@
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/image_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
             android:text="画像"
+            android:visibility="gone"
             app:bootstrapBrand="regular"
             app:buttonMode="regular"
             app:roundedCorners="true" />
@@ -57,19 +60,18 @@
         <EditText
             android:id="@+id/text"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:hint="@string/now_hint"
-            android:inputType="text"
-            android:paddingStart="5dp"
-            android:paddingEnd="5sp" />
+            android:inputType="textMultiLine|text|textImeMultiLine"
+            android:maxHeight="140dp" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/tweet_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
             app:bootstrapBrand="info"
             app:bootstrapText="ツイート"
             app:roundedCorners="true" />
@@ -80,6 +82,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="100dp"
+        android:background="@color/exColor"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,5 +130,53 @@
             app:roundedCorners="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="677dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:padding="5dp"
+                app:srcCompat="@mipmap/ic_launcher"
+                tools:layout_editor_absoluteX="33dp"
+                tools:layout_editor_absoluteY="524dp" />
+
+            <ImageView
+                android:id="@+id/imageView10"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:padding="5dp"
+                app:srcCompat="@mipmap/ic_launcher"
+                tools:layout_editor_absoluteX="122dp"
+                tools:layout_editor_absoluteY="502dp" />
+
+            <ImageView
+                android:id="@+id/imageView11"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:padding="5dp"
+                app:srcCompat="@mipmap/ic_launcher" />
+
+            <ImageView
+                android:id="@+id/imageView12"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:padding="5dp"
+                app:srcCompat="@mipmap/ic_launcher" />
+        </TableRow>
+
+    </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

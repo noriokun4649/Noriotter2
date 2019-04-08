@@ -5,15 +5,22 @@ import jp.noriokun4649.noriotter2.twitter.GetSearch;
 import twitter4j.Query;
 
 public class TweetSearch extends TimeLineBase {
+
+    private GetSearch getSearch;
+    private Query query;
+
     @Override
     public void getFastLoad() {
         String tag = getArguments().getString("tag");
-        if (tag != null) {
-            getSearch(tag);
-        }
         getTweetListItemAdapter().clear();
         getTweetListItemAdapter().notifyDataSetChanged();
         getSwipeRefreshLayout().setRefreshing(false);
+        getSwipeRefreshLayout().setEnabled(false);
+        getSearch = new GetSearch(getActivity(), getAsyncTwitter(), getTweetListItemAdapter(), this);
+        query = new Query();
+        if (tag != null) {
+            getSearch(tag);
+        }
     }
 
     @Override
@@ -23,14 +30,14 @@ public class TweetSearch extends TimeLineBase {
 
     @Override
     public void getOldLoad(final long index) {
+        query.setMaxId(index);
+        getSearch.getSearch(query, true);
         getSwipeRefreshLayout().setRefreshing(false);
     }
 
     public void getSearch(final String s) {
-        Query query = new Query();
         query.setCount(20);
         query.query(s);
-        GetSearch getSearch = new GetSearch(getActivity(), getAsyncTwitter(), getTweetListItemAdapter(), this);
-        getSearch.getSearch(query);
+        getSearch.getSearch(query, false);
     }
 }

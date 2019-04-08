@@ -1,29 +1,44 @@
 package jp.noriokun4649.noriotter2.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -71,17 +86,19 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
     private BootstrapButton tweetButton;
     private EditText edtext;
     private ArrayList<File> fileArrayList = new ArrayList<>();
+    private InputMethodManager inputMethodManager;
     private View.OnClickListener onClickListener = v -> {
         String text = edtext.getText().toString();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        //if (media == null) {
-        asyncTwitter.updateStatus(text);
-                /*
-            } else {
-                asyncTwitter.updateStatus(new StatusUpdate(string).media(media));
-                media = null;
-            }*/
+        if (fileArrayList.size() == 0 || fileArrayList == null) {
+            asyncTwitter.updateStatus(text);
+        } else {
+            //twitterConnect.loginSing(text, fileArrayList);
+            fileArrayList.clear();
+        }
         edtext.setText("");
+        inputMethodManager.hideSoftInputFromWindow(constraintLayout.getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
     };
 
     @Nullable
@@ -99,6 +116,7 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
         asyncTwitter = twitterConnect.getmTwitter();
         asyncTwitter.addListener(new TimeLineTwetterAdapter(this, asyncTwitter));
         edtext = view.findViewById(R.id.text);
+        inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         BootstrapButton buttonClose = view.findViewById(R.id.button_close);
         BootstrapButton imageButton = view.findViewById(R.id.image_button);
         tweetButton = view.findViewById(R.id.tweet_button);
@@ -195,31 +213,13 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
                         quitScreenname.setText(tweetList.getScreanname());
                         quitText.setText(tweetList.getTwiite());
                         tweetButton.setOnClickListener(v -> {
-                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                             asyncTwitter.updateStatus(new StatusUpdate(tweetList.getScreanname() + " " + edtext.getText()).inReplyToStatusId(tweetList.getTweetid()));
                             edtext.setText("");
                             constraintLayout.setVisibility(View.GONE);
                             quit.setVisibility(View.GONE);
                             tweetButton.setOnClickListener(onClickListener);
                         });
-                            /*
-                            LayoutInflater factory = LayoutInflater.from(getContext());
-                            final View inputView = factory.inflate(R.layout.reply, null);
-                            final AlertDialog.Builder as = new AlertDialog.Builder(getContext());
-                            final AlertDialog alertDialog = as.create();
-                            alertDialog.setView(inputView);
-                            final EditText et = (EditText) inputView.findViewById(R.id.editText7);
-                            Button a = (Button) inputView.findViewById(R.id.button12);
-                            a.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String input = et.getText().toString();
-                                    asyncTwitter.updateStatus(new StatusUpdate("@" + useredata.name + " " + input).inReplyToStatusId(useredata.tweetid));
-                                    alertDialog.dismiss();
-                                }
-                            });
-                            alertDialog.show();
-                            */
                         break;
                     case R.id.textView36:
                         break;
@@ -237,6 +237,12 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Toast.makeText(getContext(), String.valueOf(fileArrayList.size()), Toast.LENGTH_LONG).show();
     }
 
     private void openMediaActivity(final View view, final int index, final String name, final String[] medias) {

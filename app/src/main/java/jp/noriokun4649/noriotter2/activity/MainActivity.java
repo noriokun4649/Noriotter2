@@ -160,6 +160,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_search) {
             startActivity(new Intent(MainActivity.this, SearchActivity.class));
+        } else if (id == R.id.nav_free_tweet) {
+            startActivity(new Intent(MainActivity.this,DokodemoTweetActivity.class));
         }
 /*
         if (id == R.id.nav_camera) {
