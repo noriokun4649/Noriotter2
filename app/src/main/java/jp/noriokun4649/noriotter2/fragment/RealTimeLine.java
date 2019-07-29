@@ -38,6 +38,8 @@ public class RealTimeLine extends TimeLineBase implements StatusCallBack, ICallB
         public void onException(final Exception ex) {
             handler.post(() -> {
                 twitterStream.shutdown();
+                IconicsDrawable gmdAuto = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_autorenew);
+                getActionButton().setImageDrawable(gmdAuto);
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                 alertDialog.setTitle("Error ( *´艸｀)");
                 alertDialog.setMessage(ex.getMessage());
@@ -82,6 +84,8 @@ public class RealTimeLine extends TimeLineBase implements StatusCallBack, ICallB
         getActionButton().setOnClickListener(v -> {
             getAsyncTwitter().getFriendsIDs(-1);
             Toast.makeText(getContext(), "Stream接続開始", Toast.LENGTH_LONG).show();
+            IconicsDrawable gmdClose = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_close);
+            getActionButton().setImageDrawable(gmdClose);
         });
     }
 
@@ -96,9 +100,6 @@ public class RealTimeLine extends TimeLineBase implements StatusCallBack, ICallB
     }
 
     class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
-
-        private AppCompatActivity mainActivity;
-
         AsyncHttpRequest() {
         }
 
