@@ -62,8 +62,6 @@ public class GetStatus {
 
     public void getStatus(final Status status, final AsyncTwitter asyncTwitterd, final TweetListItemAdapter adapter,
                           final Context context, final boolean mode) {
-        Double lat = null;
-        Double lng = null;
         String[] urls = null;
         String[] medias = null;
         final boolean isRetwet = status.isRetweet();
@@ -82,8 +80,6 @@ public class GetStatus {
         if (location != null) {
             double dlat = location.getLatitude();
             double dlng = location.getLongitude();
-            lat = dlat;
-            lng = dlng;
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
             List<Address> addresses = null;
             try {
@@ -213,7 +209,7 @@ public class GetStatus {
             text = texts.replace(uentity.getURL(), expandedURL);
             list.add(expandedURL);
         }
-        return new Object[]{(String[]) list.toArray(new String[0]), text};
+        return new Object[]{list.toArray(new String[0]), text};
     }
 
     private Object[] getMedias(final MediaEntity[] mediaEntities, final String texts) {
@@ -232,6 +228,6 @@ public class GetStatus {
             list.add(expandedURL);
             text = texts.replace(mentity.getURL(), "");
         }
-        return new Object[]{(String[]) list.toArray(new String[0]), text, movieThumbnail};
+        return new Object[]{list.toArray(new String[0]), text, movieThumbnail};
     }
 }

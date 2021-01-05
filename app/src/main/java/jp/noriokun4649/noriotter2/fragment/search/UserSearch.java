@@ -9,12 +9,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import java.util.ArrayList;
+
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.activity.UserPageActivity;
 import jp.noriokun4649.noriotter2.list.UserList;

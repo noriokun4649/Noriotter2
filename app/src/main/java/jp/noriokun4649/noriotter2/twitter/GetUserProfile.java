@@ -6,7 +6,7 @@ import twitter4j.AsyncTwitter;
 
 public class GetUserProfile {
 
-    private AsyncTwitter asyncTwitter;
+    private final AsyncTwitter asyncTwitter;
 
     public GetUserProfile(final Activity contexts, final AsyncTwitter asyncTwitterd, final StatusCallBack callBack) {
         this.asyncTwitter = asyncTwitterd;

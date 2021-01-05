@@ -2,7 +2,6 @@ package jp.noriokun4649.noriotter2.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -19,12 +18,18 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,13 +45,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.activity.MediaActivity;
 import jp.noriokun4649.noriotter2.activity.UserPageActivity;
@@ -71,7 +69,7 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
     private SwipeRefreshLayout swipeRefreshLayout;
     private AsyncTwitter asyncTwitter;
     private FloatingActionButton actionButton;
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private ArrayList<TweetList> arrayList;
     private View topView;
     private TweetList tweetList;
@@ -85,9 +83,9 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
     private TextView textMode;
     private BootstrapButton tweetButton;
     private EditText edtext;
-    private ArrayList<File> fileArrayList = new ArrayList<>();
+    private final ArrayList<File> fileArrayList = new ArrayList<>();
     private InputMethodManager inputMethodManager;
-    private View.OnClickListener onClickListener = v -> {
+    private final View.OnClickListener onClickListener = v -> {
         String text = edtext.getText().toString();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         if (fileArrayList.size() == 0 || fileArrayList == null) {
@@ -149,9 +147,7 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
         IconicsDrawable gmdUp = new IconicsDrawable(getContext(), GoogleMaterial.Icon.gmd_arrow_upward);
         actionButton.setImageDrawable(gmdUp);
         actionButton.setVisibility(View.VISIBLE);
-        actionButton.setOnClickListener(v -> {
-            listView.smoothScrollToPosition(0);
-        });
+        actionButton.setOnClickListener(v -> listView.smoothScrollToPosition(0));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean loginFlag = sharedPreferences.getBoolean("flag", false);
         if (loginFlag) {
@@ -175,64 +171,54 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                TimeLineBase.this.tweetList = arrayList.get(arrayList.size() - 1 - position);
-                int getId = view.getId();
-                switch (getId) {
-                    case R.id.image1:
-                        openMediaActivity(view, 0, "image0", tweetList.getMedias());
-                        break;
-                    case R.id.quit_image1:
-                        openMediaActivity(view, 0, "image0", tweetList.getQuitMedias());
-                        break;
-                    case R.id.image2:
-                        openMediaActivity(view, 1, "image1", tweetList.getMedias());
-                        break;
-                    case R.id.quit_image2:
-                        openMediaActivity(view, 1, "image1", tweetList.getQuitMedias());
-                        break;
-                    case R.id.image3:
-                        openMediaActivity(view, 2, "image2", tweetList.getMedias());
-                        break;
-                    case R.id.quit_image3:
-                        openMediaActivity(view, 2, "image2", tweetList.getQuitMedias());
-                        break;
-                    case R.id.image4:
-                        openMediaActivity(view, 3, "image3", tweetList.getMedias());
-                        break;
-                    case R.id.quit_image4:
-                        openMediaActivity(view, 3, "image3", tweetList.getQuitMedias());
-                        break;
-                    case R.id.textView33:
-                        textMode.setText(R.string.reply);
-                        constraintLayout.setVisibility(View.VISIBLE);
-                        quit.setVisibility(View.VISIBLE);
-                        quitName.setText(tweetList.getName());
-                        quitScreenname.setText(tweetList.getScreanname());
-                        quitText.setText(tweetList.getTwiite());
-                        tweetButton.setOnClickListener(v -> {
-                            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                            asyncTwitter.updateStatus(new StatusUpdate(tweetList.getScreanname() + " " + edtext.getText()).inReplyToStatusId(tweetList.getTweetid()));
-                            edtext.setText("");
-                            constraintLayout.setVisibility(View.GONE);
-                            quit.setVisibility(View.GONE);
-                            tweetButton.setOnClickListener(onClickListener);
-                        });
-                        break;
-                    case R.id.textView36:
-                        break;
-                    case R.id.imageView8:
-                        Intent intent = new Intent(getActivity(), UserPageActivity.class);
-                        intent.putExtra("userid", tweetList.getScreanname());
-                        startActivity(intent);
-                    default:
-                        if ((view.getId() == R.id.textView34) || (view.getId() == R.id.textView35)) {
-                            TimeLineBase.this.topView = view;
-                            asyncTwitter.showStatus(tweetList.getTweetid());
-                        }
-                        break;
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            TimeLineBase.this.tweetList = arrayList.get(arrayList.size() - 1 - position);
+            int getId = view1.getId();
+            if (getId == R.id.image1) {
+                openMediaActivity(view1, 0, "image0", tweetList.getMedias());
+            } else if (getId == R.id.quit_image1) {
+                openMediaActivity(view1, 0, "image0", tweetList.getQuitMedias());
+            } else if (getId == R.id.image2) {
+                openMediaActivity(view1, 1, "image1", tweetList.getMedias());
+            } else if (getId == R.id.quit_image2) {
+                openMediaActivity(view1, 1, "image1", tweetList.getQuitMedias());
+            } else if (getId == R.id.image3) {
+                openMediaActivity(view1, 2, "image2", tweetList.getMedias());
+            } else if (getId == R.id.quit_image3) {
+                openMediaActivity(view1, 2, "image2", tweetList.getQuitMedias());
+            } else if (getId == R.id.image4) {
+                openMediaActivity(view1, 3, "image3", tweetList.getMedias());
+            } else if (getId == R.id.quit_image4) {
+                openMediaActivity(view1, 3, "image3", tweetList.getQuitMedias());
+            } else if (getId == R.id.textView33) {
+                textMode.setText(R.string.reply);
+                constraintLayout.setVisibility(View.VISIBLE);
+                quit.setVisibility(View.VISIBLE);
+                quitName.setText(tweetList.getName());
+                quitScreenname.setText(tweetList.getScreanname());
+                quitText.setText(tweetList.getTwiite());
+                tweetButton.setOnClickListener(v -> {
+                    Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    asyncTwitter.updateStatus(new StatusUpdate(tweetList.getScreanname() + " " + edtext.getText()).inReplyToStatusId(tweetList.getTweetid()));
+                    edtext.setText("");
+                    constraintLayout.setVisibility(View.GONE);
+                    quit.setVisibility(View.GONE);
+                    tweetButton.setOnClickListener(onClickListener);
+                });
+            } else if (getId == R.id.textView36) {
+            } else if (getId == R.id.imageView8) {
+                Intent intent = new Intent(getActivity(), UserPageActivity.class);
+                intent.putExtra("userid", tweetList.getScreanname());
+                startActivity(intent);
+
+                if ((view1.getId() == R.id.textView34) || (view1.getId() == R.id.textView35)) {
+                    TimeLineBase.this.topView = view1;
+                    asyncTwitter.showStatus(tweetList.getTweetid());
+                }
+            } else {
+                if ((view1.getId() == R.id.textView34) || (view1.getId() == R.id.textView35)) {
+                    TimeLineBase.this.topView = view1;
+                    asyncTwitter.showStatus(tweetList.getTweetid());
                 }
             }
         });
@@ -265,71 +251,65 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
         mHandler.post(() -> {
             boolean isRetweeted = status.isRetweeted();
             boolean isFavorited = status.isFavorited();
-            switch (topView.getId()) {
-                case R.id.textView34:
-                    TextView rtText = (TextView) topView;
-                    if (!isRetweeted) {
-                        AlertDialog.Builder ab = new AlertDialog.Builder(topView.getContext());
-                        ab.setTitle(status.getText());
-                        String[] items = {getString(R.string.retweet), getString(R.string.quit_tweet)};
-                        ab.setPositiveButton("閉じる", null);
-                        ab.setItems(items, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog, final int which) {
-                                switch (which) {
-                                    case 0:
-                                        asyncTwitter.retweetStatus(status.getId());
-                                        rtText.setTextColor(Color.GREEN);
-                                        tweetList.setMeRt(true);
-                                        tweetList.setRtcount(tweetList.getRtcount() + 1);
-                                        break;
-                                    case 1:
-                                        textMode.setText(R.string.quit_tweet);
-                                        constraintLayout.setVisibility(View.VISIBLE);
-                                        quit.setVisibility(View.VISIBLE);
-                                        quitName.setText(tweetList.getName());
-                                        quitScreenname.setText(tweetList.getScreanname());
-                                        quitText.setText(tweetList.getTwiite());
-                                        tweetButton.setOnClickListener(v -> {
-                                            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                                            asyncTwitter.updateStatus(edtext.getText() + "\nhttps://twitter.com/"
-                                                    + tweetList.getScreanname().replace("@", "") + "/status/" + tweetList.getTweetid());
-                                            edtext.setText("");
-                                            constraintLayout.setVisibility(View.GONE);
-                                            quit.setVisibility(View.GONE);
-                                            tweetButton.setOnClickListener(onClickListener);
-                                        });
-                                        break;
-                                    default:
-                                }
-                                tweetListItemAdapter.notifyDataSetChanged();
-                            }
-                        });
-                        ab.show();
-                    } else {
-                        //asyncTwitter.unretweetStatus(status.getId());
-                        tweetList.setMeRt(false);
-                        rtText.setTextColor(Color.BLACK);
-                        tweetList.setRtcount(tweetList.getRtcount() - 1);
+            int id = topView.getId();
+            if (id == R.id.textView34) {
+                TextView rtText = (TextView) topView;
+                if (!isRetweeted) {
+                    AlertDialog.Builder ab = new AlertDialog.Builder(topView.getContext());
+                    ab.setTitle(status.getText());
+                    String[] items = {getString(R.string.retweet), getString(R.string.quit_tweet)};
+                    ab.setPositiveButton("閉じる", null);
+                    ab.setItems(items, (dialog, which) -> {
+                        switch (which) {
+                            case 0:
+                                asyncTwitter.retweetStatus(status.getId());
+                                rtText.setTextColor(Color.GREEN);
+                                tweetList.setMeRt(true);
+                                tweetList.setRtcount(tweetList.getRtcount() + 1);
+                                break;
+                            case 1:
+                                textMode.setText(R.string.quit_tweet);
+                                constraintLayout.setVisibility(View.VISIBLE);
+                                quit.setVisibility(View.VISIBLE);
+                                quitName.setText(tweetList.getName());
+                                quitScreenname.setText(tweetList.getScreanname());
+                                quitText.setText(tweetList.getTwiite());
+                                tweetButton.setOnClickListener(v -> {
+                                    Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                                    asyncTwitter.updateStatus(edtext.getText() + "\nhttps://twitter.com/"
+                                            + tweetList.getScreanname().replace("@", "") + "/status/" + tweetList.getTweetid());
+                                    edtext.setText("");
+                                    constraintLayout.setVisibility(View.GONE);
+                                    quit.setVisibility(View.GONE);
+                                    tweetButton.setOnClickListener(onClickListener);
+                                });
+                                break;
+                            default:
+                        }
                         tweetListItemAdapter.notifyDataSetChanged();
-                    }
-                    break;
-                case R.id.textView35:
-                    TextView favText = (TextView) topView;
-                    if (!isFavorited) {
-                        asyncTwitter.createFavorite(status.getId());
-                        favText.setTextColor(Color.RED);
-                        tweetList.setMeFav(true);
-                        tweetList.setFavocount(tweetList.getFavocount() + 1);
-                    } else {
-                        asyncTwitter.destroyFavorite(status.getId());
-                        favText.setTextColor(Color.BLACK);
-                        tweetList.setMeFav(false);
-                        tweetList.setFavocount(tweetList.getFavocount() - 1);
-                    }
+                    });
+                    ab.show();
+                } else {
+                    //asyncTwitter.unretweetStatus(status.getId());
+                    tweetList.setMeRt(false);
+                    rtText.setTextColor(Color.BLACK);
+                    tweetList.setRtcount(tweetList.getRtcount() - 1);
                     tweetListItemAdapter.notifyDataSetChanged();
-                    break;
-                default:
+                }
+            } else if (id == R.id.textView35) {
+                TextView favText = (TextView) topView;
+                if (!isFavorited) {
+                    asyncTwitter.createFavorite(status.getId());
+                    favText.setTextColor(Color.RED);
+                    tweetList.setMeFav(true);
+                    tweetList.setFavocount(tweetList.getFavocount() + 1);
+                } else {
+                    asyncTwitter.destroyFavorite(status.getId());
+                    favText.setTextColor(Color.BLACK);
+                    tweetList.setMeFav(false);
+                    tweetList.setFavocount(tweetList.getFavocount() - 1);
+                }
+                tweetListItemAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -350,9 +330,7 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
                         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
                             assert inputStream != null;
                             IOUtils.copy(inputStream, fileOutputStream);
-                        } catch (AssertionError error) {
-                            error.printStackTrace();
-                        } catch (IOException error) {
+                        } catch (AssertionError | IOException error) {
                             error.printStackTrace();
                         }
                         fileArrayList.add(file);

@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.list.UserList;
 import jp.noriokun4649.noriotter2.list.UserListItemAdapter;
@@ -24,19 +25,19 @@ public class GetFollower {
      * ハンドラー.
      * このインスタンスを通して、じゃないとアプリの画面等を操作できません.
      */
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     /**
      * 非同期処理のTwitterインスタンス.
      */
-    private AsyncTwitter asyncTwitter;
+    private final AsyncTwitter asyncTwitter;
     /**
      * Twitterの取得時のリスナー.
      */
-    private TwitterListener twitterListener;
+    private final TwitterListener twitterListener;
     /**
      * アクティビティの情報.
      */
-    private AppCompatActivity context;
+    private final AppCompatActivity context;
 
     /**
      * コンストラクタ.
@@ -96,9 +97,7 @@ public class GetFollower {
 
             @Override
             public void onException(final TwitterException te, final TwitterMethod method) {
-                mHandler.post(() -> {
-                    Toast.makeText(context, R.string.api_limit, Toast.LENGTH_LONG).show();
-                });
+                mHandler.post(() -> Toast.makeText(context, R.string.api_limit, Toast.LENGTH_LONG).show());
                 super.onException(te, method);
             }
         };

@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
 import jp.noriokun4649.noriotter2.R;
 
 /**
@@ -34,7 +35,6 @@ public class ScreenConectActivity extends AppCompatActivity {
     public static int mWidth;
     public static int mHeight;
     private MediaProjectionManager mMediaProjectionManager;
-    private MediaProjection mMediaProjection;
     private VirtualDisplay mVirtualDisplay;
 
     @Override
@@ -69,7 +69,7 @@ public class ScreenConectActivity extends AppCompatActivity {
                     return;
                 }
                 // MediaProjectionの取得
-                mMediaProjection = mMediaProjectionManager.getMediaProjection(resultCode, data);
+                MediaProjection mMediaProjection = mMediaProjectionManager.getMediaProjection(resultCode, data);
                 DisplayMetrics metrics = getResources().getDisplayMetrics();
                 mWidth = metrics.widthPixels;
                 mHeight = metrics.heightPixels;

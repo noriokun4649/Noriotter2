@@ -14,6 +14,8 @@ import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.kazakago.cryptore.CipherAlgorithm;
 import com.kazakago.cryptore.Cryptore;
 import com.kazakago.cryptore.DecryptResult;
@@ -32,7 +34,6 @@ import java.security.cert.CertificateException;
 
 import javax.crypto.NoSuchPaddingException;
 
-import androidx.appcompat.app.AppCompatActivity;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.dialogfragment.FragmentCancelOKAlertDialog;
 import twitter4j.AsyncTwitter;
@@ -63,12 +64,12 @@ public class TwitterConnect implements Serializable {
      * ハンドラー.
      * このインスタンスを通して、じゃないとアプリの画面等を操作できません.
      */
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     /**
      * コンテキスト.
      * キャストしてサポートライブラリ使用可能なアクティビティ.
      */
-    private Context context;
+    private final Context context;
     /**
      * リクエストとーくん.
      */
@@ -99,13 +100,7 @@ public class TwitterConnect implements Serializable {
 
         @Override
         public void onException(final TwitterException te, final TwitterMethod method) { //super.onException(te, method);
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(context, te.getMessage(), Toast.LENGTH_SHORT).show();
-
-                }
-            });
+            mHandler.post(() -> Toast.makeText(context, te.getMessage(), Toast.LENGTH_SHORT).show());
             //Log.TimeLine("A", "a:" + te.getErrorMessage());
         }
     };

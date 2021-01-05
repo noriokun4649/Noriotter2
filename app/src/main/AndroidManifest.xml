@@ -55,16 +55,18 @@
         <activity
             android:name=".activity.GetUserFollowerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.SearchActivity"
-            android:theme="@style/AppTheme.NoActionBar"  />
-        <activity android:name=".activity.DokodemoTweetActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".overlay.ScreenConectActivity"/>
-        <activity android:name=".activity.SettingActivity"/>
+        <activity
+            android:name=".activity.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.DokodemoTweetActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".overlay.ScreenConectActivity" />
+        <activity android:name=".activity.SettingActivity" />
+
         <service
             android:name=".overlay.OverrideView"
-            android:label="TwitterOverrideViewService">
-        </service>
+            android:label="TwitterOverrideViewService" />
 
     </application>
 

@@ -7,12 +7,14 @@ package jp.noriokun4649.noriotter2.dialogfragment;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import org.jetbrains.annotations.NotNull;
+
 import jp.noriokun4649.noriotter2.R;
 
 /**
@@ -46,7 +48,7 @@ public class FragmentCancelOKAlertDialog extends DialogFragment {
 
 
     @Override
-    public void onAttach(final Context context) {
+    public void onAttach(final @NotNull Context context) {
         super.onAttach(context);
         if (context instanceof DialogsListener) {
             mListener = (DialogsListener) context;
@@ -67,18 +69,8 @@ public class FragmentCancelOKAlertDialog extends DialogFragment {
         if (title != 0) {
             a.setTitle(title);
         }
-        a.setPositiveButton(buttonName, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                mListener.onItemClick(which, getTag());
-            }
-        });
-        a.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                mListener.onItemClick(which, getTag());
-            }
-        });
+        a.setPositiveButton(buttonName, (dialog, which) -> mListener.onItemClick(which, getTag()));
+        a.setNegativeButton(R.string.cancel, (dialog, which) -> mListener.onItemClick(which, getTag()));
         return a.create();
     }
 }

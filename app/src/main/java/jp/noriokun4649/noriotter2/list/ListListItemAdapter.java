@@ -13,10 +13,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import java.util.List;
+
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.glide.MyGlideApp;
 

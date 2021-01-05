@@ -7,9 +7,6 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,12 +15,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+
+import org.jetbrains.annotations.NotNull;
+
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.fragment.Media;
 
 public class MediaActivity extends AppCompatActivity {
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private int count;
     private String[] url;
@@ -45,7 +47,7 @@ public class MediaActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar3);
         toolbar.setNavigationIcon(gmdBack);
         toolbar.setNavigationOnClickListener(v -> finish());
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.media_view);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(index);
@@ -79,11 +81,9 @@ public class MediaActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finishAfterTransition();
-                return true;
-            default:
+        if (item.getItemId() == android.R.id.home) {
+            finishAfterTransition();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -91,12 +91,12 @@ public class MediaActivity extends AppCompatActivity {
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(final FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
 
         @Override
-        public Fragment getItem(final int position) {
+        public @NotNull Fragment getItem(final int position) {
             Bundle bundle = new Bundle();
             bundle.putInt("image_index", position);
             bundle.putString("image_url", url[position]);

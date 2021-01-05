@@ -26,7 +26,7 @@
     <string name="profile">Profile</string>
     <string name="list">List</string>
     <string name="search">Search</string>
-    <string name="free_tweet">どこでもツイート</string>
+    <string name="free_tweet">Free Tweet</string>
     <string name="other">Other</string>
     <string name="setting">Setting</string>
     <string name="oss">Open Source License</string>
@@ -50,4 +50,8 @@
     <string name="retweet">Retweet</string>
     <string name="quit_tweet">Quit Tweet</string>
     <string name="reply">Reply</string>
+    <string name="logout">Logout</string>
+    <string name="capture_connecting_now">Capture Connecting Now…</string>
+    <string name="accept">Accepted</string>
+    <string name="lock">Private</string>
 </resources>

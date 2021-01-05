@@ -6,9 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapText;
@@ -16,9 +19,6 @@ import com.beardedhen.androidbootstrap.BootstrapText;
 import java.io.File;
 import java.io.IOException;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 
@@ -27,7 +27,7 @@ public class HelloActivity extends AppCompatActivity {
     /**
      * Twitterのインスタンス.
      */
-    private TwitterConnect twitterConnect = new TwitterConnect(this);
+    private final TwitterConnect twitterConnect = new TwitterConnect(this);
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -57,6 +57,7 @@ public class HelloActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(final Intent intent) {
+        super.onNewIntent(intent);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         final Uri uri = intent.getData();
@@ -70,12 +71,9 @@ public class HelloActivity extends AppCompatActivity {
                 text.addText(getString(R.string.start_noriotter));
                 textView.setText(getString(R.string.twitter_connect_ok));
                 button.setBootstrapText(text.build());
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        finish();
-                        startActivity(new Intent(HelloActivity.this, MainActivity.class));
-                    }
+                button.setOnClickListener(v -> {
+                    finish();
+                    startActivity(new Intent(HelloActivity.this, MainActivity.class));
                 });
             } else {
                 textView.setText(getString(R.string.twitter_connect_error));

@@ -21,8 +21,8 @@ import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 import twitter4j.StatusUpdate;
 
 import static android.widget.Toast.makeText;
-import static jp.noriokun4649.noriotter2.overlay.ScreenConectActivity.mImageReader;
 import static jp.noriokun4649.noriotter2.overlay.ScreenConectActivity.mHeight;
+import static jp.noriokun4649.noriotter2.overlay.ScreenConectActivity.mImageReader;
 import static jp.noriokun4649.noriotter2.overlay.ScreenConectActivity.mWidth;
 
 /**
@@ -30,9 +30,9 @@ import static jp.noriokun4649.noriotter2.overlay.ScreenConectActivity.mWidth;
  */
 
 public class TweetTask extends AsyncTask<Integer, Integer, Integer> {
-    private Context mainActivity;
-    private TwitterConnect twitterIn;
-    private String fat;
+    private final Context mainActivity;
+    private final TwitterConnect twitterIn;
+    private final String fat;
 
     // コンストラクター
     public TweetTask(Context activity, TwitterConnect twitterIn, String fat) {
@@ -50,7 +50,7 @@ public class TweetTask extends AsyncTask<Integer, Integer, Integer> {
         try {
             //　1sec sleep
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
         twitterIn.getmTwitter().updateStatus(new StatusUpdate(fat).media(getBitmapFiles()));
         Log.d("debug", "" + params[0]);
@@ -85,7 +85,7 @@ public class TweetTask extends AsyncTask<Integer, Integer, Integer> {
             int rowStride = planes[0].getRowStride();
             int rowPadding = rowStride - pixelStride * mWidth;
             // バッファからBitmapを生成
-            Bitmap.Config config = Bitmap.Config.ARGB_8888;
+            Bitmap.Config config;
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
             int outformat = sharedPreferences.getInt("outformat", 0);
             switch (outformat) {

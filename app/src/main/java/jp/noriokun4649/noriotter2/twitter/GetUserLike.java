@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
+
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.list.TweetListItemAdapter;
 import twitter4j.AsyncTwitter;
@@ -20,20 +21,16 @@ public class GetUserLike {
      * ハンドラー.
      * このインスタンスを通して、じゃないとアプリの画面等を操作できません.
      */
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
 
     /**
      * 非同期処理のTwitterインスタンス.
      */
-    private AsyncTwitter asyncTwitter;
-    /**
-     * Twitterの取得時のリスナー.
-     */
-    private TwitterListener twitterListener;
+    private final AsyncTwitter asyncTwitter;
     /**
      * アクティビティの情報.
      */
-    private FragmentActivity context;
+    private final FragmentActivity context;
 
     private boolean mode = false;
 
@@ -41,12 +38,10 @@ public class GetUserLike {
     public GetUserLike(final FragmentActivity contexts, final AsyncTwitter asyncTwitterd, final TweetListItemAdapter adapter, final ICallBack callBack) {
         this.asyncTwitter = asyncTwitterd;
         this.context = contexts;
-        twitterListener = new TwitterAdapter() {
+        TwitterListener twitterListener = new TwitterAdapter() {
             @Override
             public void gotFavorites(final ResponseList<Status> statuses) {
-                mHandler.post(() -> {
-                    GetStatus status = new GetStatus(statuses, asyncTwitter, adapter, context, callBack, mode);
-                });
+                mHandler.post(() -> new GetStatus(statuses, asyncTwitter, adapter, context, callBack, mode));
             }
 
             @Override

@@ -21,6 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -29,8 +32,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.activity.SearchActivity;
 import jp.noriokun4649.noriotter2.activity.UserPageActivity;
@@ -44,8 +45,8 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
     private final LayoutInflater inflater;
-    private List<TweetList> arrayList;
-    private Context context;
+    private final List<TweetList> arrayList;
+    private final Context context;
     private TwitterConnect twitterIn;
 
     public TweetListItemAdapter(final Context context, final List<TweetList> objects) {
@@ -104,7 +105,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
         }
         if (useredata.isRetwet()) {
             textView32.setVisibility(View.VISIBLE);
-            textView32.setText("{cmd-twitter-retweet}  " + useredata.getRetwetOwner() + "さんがリツイートしました");
+            textView32.setText(String.format("{cmd-twitter-retweet}  %sさんがリツイートしました", useredata.getRetwetOwner()));
             textView32.setOnClickListener(clickListener);
         }
         if (useredata.isQuit()) {
@@ -237,7 +238,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
     }
 
     private class GetUserSpan extends ClickableSpan {
-        private String user;
+        private final String user;
 
         GetUserSpan(final String user) {
             this.user = user;
@@ -252,7 +253,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
     }
 
     private class GetHashSpan extends ClickableSpan {
-        private String tag;
+        private final String tag;
 
         GetHashSpan(final String tag) {
             this.tag = tag;

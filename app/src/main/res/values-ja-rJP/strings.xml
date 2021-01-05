@@ -47,4 +47,8 @@
     <string name="reply">返信</string>
     <string name="quit_tweet">引用ツイート</string>
     <string name="retweet">リツイート</string>
+    <string name="logout">ログアウト</string>
+    <string name="capture_connecting_now">Capture Connecting Now...</string>
+    <string name="accept">Accepted</string>
+    <string name="lock">Private</string>
 </resources>

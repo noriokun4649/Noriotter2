@@ -5,6 +5,7 @@ import android.preference.PreferenceActivity;
 import android.view.WindowManager;
 
 import androidx.core.content.ContextCompat;
+
 import jp.noriokun4649.noriotter2.R;
 
 /**

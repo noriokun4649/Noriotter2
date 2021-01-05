@@ -10,12 +10,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.iconics.context.IconicsLayoutInflater2;
-
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,9 +20,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.iconics.context.IconicsLayoutInflater2;
+
+import org.jetbrains.annotations.NotNull;
+
 import jp.noriokun4649.noriotter2.R;
-import jp.noriokun4649.noriotter2.fragment.DirectMessage;
-import jp.noriokun4649.noriotter2.fragment.Notice;
 import jp.noriokun4649.noriotter2.fragment.RealTimeLine;
 import jp.noriokun4649.noriotter2.fragment.TimeLine;
 import jp.noriokun4649.noriotter2.glide.MyGlideApp;
@@ -45,14 +46,11 @@ public class MainActivity extends AppCompatActivity
      * ハンドラー.
      * このインスタンスを通して、じゃないとアプリの画面等を操作できません.
      */
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     /**
      * Twitterのインスタンス.
      */
-    private TwitterConnect twitterConnect = new TwitterConnect(this);
-
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
+    private final TwitterConnect twitterConnect = new TwitterConnect(this);
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -84,8 +82,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         setNaviIcon(navigationView);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = findViewById(R.id.viewpager);
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        ViewPager mViewPager = findViewById(R.id.viewpager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         TabLayout tabLayout = findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -103,20 +101,20 @@ public class MainActivity extends AppCompatActivity
         IconicsDrawable gmdSearch = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_search);
         IconicsDrawable gmdSend = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_send);
         IconicsDrawable gmdCode = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_code);
-        IconicsDrawable gmdSettings = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_settings);
+        IconicsDrawable gmdLogout = new IconicsDrawable(this, GoogleMaterial.Icon.gmd_exit_to_app);
         Menu menu = navi.getMenu();
         MenuItem profile = menu.findItem(R.id.nav_profile);
         MenuItem list = menu.findItem(R.id.nav_list);
         MenuItem search = menu.findItem(R.id.nav_search);
         MenuItem freeTweet = menu.findItem(R.id.nav_free_tweet);
         MenuItem code = menu.findItem(R.id.nav_oss);
-        MenuItem setting = menu.findItem(R.id.nav_setting);
+        MenuItem logout = menu.findItem(R.id.nav_logout);
         profile.setIcon(gmdAccountCircle);
         list.setIcon(gmdList);
         search.setIcon(gmdSearch);
         freeTweet.setIcon(gmdSend);
         code.setIcon(gmdCode);
-        setting.setIcon(gmdSettings);
+        logout.setIcon(gmdLogout);
     }
 
     @Override
@@ -148,7 +146,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
@@ -161,7 +159,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_search) {
             startActivity(new Intent(MainActivity.this, SearchActivity.class));
         } else if (id == R.id.nav_free_tweet) {
-            startActivity(new Intent(MainActivity.this,DokodemoTweetActivity.class));
+            startActivity(new Intent(MainActivity.this, DokodemoTweetActivity.class));
+        } else if (id == R.id.nav_logout) {
+            twitterConnect.logout();
+            finish();
+            startActivity(new Intent(MainActivity.this, HelloActivity.class));
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -185,7 +187,7 @@ public class MainActivity extends AppCompatActivity
             TextView followerCount = findViewById(R.id.follower_count);
 
             MyGlideApp.with(getApplicationContext()).load(user.get400x400ProfileImageURLHttps()).circleCrop().into(image);
-            screenName.setText("@" + user.getScreenName());
+            screenName.setText(String.format("@%s", user.getScreenName()));
             userName.setText(user.getName());
             followCount.setText(getString(R.string.follow_count, user.getFriendsCount()));
             followerCount.setText(getString(R.string.follower_count, user.getFollowersCount()));
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        public Fragment getItem(final int position) {
+        public @NotNull Fragment getItem(final int position) {
             switch (position) {
                 case 0:
                     return new TimeLine();

@@ -5,14 +5,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.google.android.material.appbar.AppBarLayout;
-
-import org.jetbrains.annotations.NotNull;
-
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+
+import com.google.android.material.appbar.AppBarLayout;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
 

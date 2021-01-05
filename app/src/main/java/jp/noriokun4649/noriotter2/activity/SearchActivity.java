@@ -5,11 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.google.android.material.tabs.TabLayout;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.iconics.context.IconicsLayoutInflater2;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -20,6 +15,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.iconics.context.IconicsLayoutInflater2;
+
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.fragment.search.TweetSearch;
 import jp.noriokun4649.noriotter2.fragment.search.UserSearch;
@@ -85,21 +86,19 @@ public class SearchActivity extends AppCompatActivity {
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(final FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
         public Fragment getItem(final int position) {
-            switch (position) {
-                case 1:
-                    return new UserSearch();
-                default:
-                    Bundle bundle = new Bundle();
-                    bundle.putString("tag", tag);
-                    TweetSearch tweetSearch = new TweetSearch();
-                    tweetSearch.setArguments(bundle);
-                    return tweetSearch;
+            if (position == 1) {
+                return new UserSearch();
             }
+            Bundle bundle = new Bundle();
+            bundle.putString("tag", tag);
+            TweetSearch tweetSearch = new TweetSearch();
+            tweetSearch.setArguments(bundle);
+            return tweetSearch;
         }
 
         @Override

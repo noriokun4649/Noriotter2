@@ -12,7 +12,7 @@ import twitter4j.User;
 public class TimeLineTwetterAdapter extends TwitterAdapter {
 
     private StatusCallBack callBack;
-    private AsyncTwitter asyncTwitter;
+    private final AsyncTwitter asyncTwitter;
     private long[] follow;
 
     public TimeLineTwetterAdapter(final StatusCallBack callBack, final AsyncTwitter asyncTwitter) {

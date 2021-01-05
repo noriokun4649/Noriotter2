@@ -30,19 +30,19 @@ public class GetList {
      * ハンドラー.
      * このインスタンスを通して、じゃないとアプリの画面等を操作できません.
      */
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     /**
      * リストのID.
      */
-    private Long listID;
+    private final Long listID;
     /**
      * 非同期処理のTwitterインスタンス.
      */
-    private AsyncTwitter asyncTwitter;
+    private final AsyncTwitter asyncTwitter;
     /**
      * Twitterの取得時のリスナー.
      */
-    private TwitterListener twitterListener;
+    private final TwitterListener twitterListener;
     /**
      * 取得完了したメンバーの数.
      * 動的

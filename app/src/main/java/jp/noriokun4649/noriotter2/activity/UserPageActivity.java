@@ -9,6 +9,16 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.LayoutInflaterCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -19,15 +29,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.LayoutInflaterCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.fragment.userprofile.UserLike;
 import jp.noriokun4649.noriotter2.fragment.userprofile.UserTweet;
@@ -41,12 +42,11 @@ import twitter4j.User;
 
 public class UserPageActivity extends AppCompatActivity implements StatusCallBack {
 
-    private Handler had = new Handler();
+    private final Handler had = new Handler();
     /**
      * Twitterのインスタンス.
      */
-    private TwitterConnect twitterConnect = new TwitterConnect(this);
-    private Toolbar toolbar;
+    private final TwitterConnect twitterConnect = new TwitterConnect(this);
     private long userId;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -66,7 +66,7 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
         userProfile.getUserProfile(id);
         IconicsDrawable gmdBack = new IconicsDrawable(this,
                 GoogleMaterial.Icon.gmd_arrow_back).sizeDp(30).paddingDp(6).color(Color.WHITE).backgroundColor(Color.argb(140, 0, 0, 0)).roundedCornersDp(15);
-        toolbar = findViewById(R.id.toolbar2);
+        Toolbar toolbar = findViewById(R.id.toolbar2);
         toolbar.setNavigationIcon(gmdBack);
         toolbar.setNavigationOnClickListener(v -> finishAfterTransition());
     }
@@ -93,7 +93,7 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
             MyGlideApp.with(this).load(user.get400x400ProfileImageURLHttps()).circleCrop().into(imageIcon);
             Glide.with(this).load(user.getProfileBanner1500x500URL()).into(imageheder);
             textName.setText(user.getName());
-            textScreenName.setText("@" + user.getScreenName());
+            textScreenName.setText(String.format("@%s", user.getScreenName()));
             textInfo.setText(user.getDescription());
             if (user.getDescription().equals("")) {
                 textInfo.setVisibility(View.GONE);
@@ -133,7 +133,7 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(final FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
 
@@ -142,16 +142,14 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
         public Fragment getItem(final int position) {
             Bundle bundle = new Bundle();
             bundle.putLong("user_id", userId);
-            switch (position) {
-                case 1:
-                    UserLike userLike = new UserLike();
-                    userLike.setArguments(bundle);
-                    return userLike;
-                default:
-                    UserTweet userTweet = new UserTweet();
-                    userTweet.setArguments(bundle);
-                    return userTweet;
+            if (position == 1) {
+                UserLike userLike = new UserLike();
+                userLike.setArguments(bundle);
+                return userLike;
             }
+            UserTweet userTweet = new UserTweet();
+            userTweet.setArguments(bundle);
+            return userTweet;
         }
 
         @Override

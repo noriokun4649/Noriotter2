@@ -7,14 +7,14 @@
         hexValue="true"
         android:defaultValue="#A1000000"
         android:key="main_color"
-        android:title="背景色選択"/>
+        android:title="背景色選択" />
     <jp.noriokun4649.noriotter2.colorpicker.ColorPickerPreference
         alphaSlider="true"
         enabledByDefault="false"
         hexValue="true"
         android:defaultValue="#97FF0000"
         android:key="back_color"
-        android:title="移動時背景色選択"/>
+        android:title="移動時背景色選択" />
     <jp.noriokun4649.noriotter2.colorpicker.ColorPickerPreference
         android:id="@+id/colorPickerPreference"
         alphaSlider="true"

@@ -6,11 +6,11 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import jp.noriokun4649.noriotter2.twitter.GetStatus;
 import jp.noriokun4649.noriotter2.twitter.ICallBack;
 import jp.noriokun4649.noriotter2.twitter.StatusCallBack;
@@ -28,12 +28,12 @@ public class RealTimeLine extends TimeLineBase implements StatusCallBack, ICallB
      * ハンドラー.
      * このインスタンスを通して、じゃないとアプリの画面等を操作できません.
      */
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private long[] follow;
     private TwitterStream twitterStream;
     private GetStatus getStatus;
 
-    private UserStreamAdapter userStreamAdapter = new UserStreamAdapter() {
+    private final UserStreamAdapter userStreamAdapter = new UserStreamAdapter() {
         @Override
         public void onException(final Exception ex) {
             handler.post(() -> {

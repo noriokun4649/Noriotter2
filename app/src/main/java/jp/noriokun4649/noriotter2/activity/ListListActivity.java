@@ -4,20 +4,19 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.list.ListList;
 import jp.noriokun4649.noriotter2.list.ListListItemAdapter;
@@ -35,7 +34,7 @@ public class ListListActivity extends AppCompatActivity {
      * ハンドラー.
      * このインスタンスを通して、じゃないとアプリの画面等を操作できません.
      */
-    private static Handler mHandler = new Handler();
+    private static final Handler mHandler = new Handler();
     /**
      * リストViewのアダプタです.
      */
@@ -69,42 +68,33 @@ public class ListListActivity extends AppCompatActivity {
 
             @Override
             public void gotUserLists(final ResponseList<UserList> userLists) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (UserList list : userLists) {
-                            ListList listList1 = new ListList(list.getName(), list.getMemberCount(),
-                                    list.getId(), list.getUser().getName(),
-                                    list.getUser().get400x400ProfileImageURLHttps(),
-                                    list.getDescription(), list.isPublic());
-                            adapter.add(listList1);
-                            adapter.notifyDataSetChanged();
-                        }
+                mHandler.post(() -> {
+                    for (UserList list : userLists) {
+                        ListList listList1 = new ListList(list.getName(), list.getMemberCount(),
+                                list.getId(), list.getUser().getName(),
+                                list.getUser().get400x400ProfileImageURLHttps(),
+                                list.getDescription(), list.isPublic());
+                        adapter.add(listList1);
+                        adapter.notifyDataSetChanged();
                     }
                 });
             }
 
             @Override
             public void onException(final TwitterException te, final TwitterMethod method) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                mHandler.post(() -> {
                 });
                 super.onException(te, method);
             }
         });
         asyncTwitter.getAccountSettings();
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                Intent intent = new Intent(ListListActivity.this, ListDetailActivity.class);
-                intent.putExtra("list_id", adapter.getItem(position).getId());
-                intent.putExtra("list_name", adapter.getItem(position).getName());
-                //intent.putExtra("count", adapter.getItem(position).getMemberCount());
-                startActivity(intent);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(ListListActivity.this, ListDetailActivity.class);
+            intent.putExtra("list_id", adapter.getItem(position).getId());
+            intent.putExtra("list_name", adapter.getItem(position).getName());
+            //intent.putExtra("count", adapter.getItem(position).getMemberCount());
+            startActivity(intent);
 
-            }
         });
         //listView.setEmptyView(linearLayout);
     }

@@ -4,11 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-import com.google.android.material.tabs.TabLayout;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.iconics.context.IconicsLayoutInflater2;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,13 +13,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.iconics.context.IconicsLayoutInflater2;
+
+import org.jetbrains.annotations.NotNull;
+
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.fragment.list.TweetList;
 import jp.noriokun4649.noriotter2.fragment.list.UsersList;
 
 public class ListDetailActivity extends AppCompatActivity {
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
     private long listId;
     private int count;
 
@@ -44,8 +45,8 @@ public class ListDetailActivity extends AppCompatActivity {
         toolbar.setTitle(getIntent().getStringExtra("list_name"));
         toolbar.setNavigationIcon(gmdBack);
         toolbar.setNavigationOnClickListener(v -> finish());
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = findViewById(R.id.viewpager);
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        ViewPager mViewPager = findViewById(R.id.viewpager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         TabLayout tabLayout = findViewById(R.id.tabs);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -54,24 +55,22 @@ public class ListDetailActivity extends AppCompatActivity {
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(final FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
-        public Fragment getItem(final int position) {
+        public @NotNull Fragment getItem(final int position) {
             Bundle bundle = new Bundle();
             bundle.putLong("list_id", listId);
             bundle.putInt("list_count", count);
-            switch (position) {
-                case 1:
-                    UsersList usersList = new UsersList();
-                    usersList.setArguments(bundle);
-                    return usersList;
-                default:
-                    TweetList tweetList = new TweetList();
-                    tweetList.setArguments(bundle);
-                    return tweetList;
+            if (position == 1) {
+                UsersList usersList = new UsersList();
+                usersList.setArguments(bundle);
+                return usersList;
             }
+            TweetList tweetList = new TweetList();
+            tweetList.setArguments(bundle);
+            return tweetList;
         }
 
         @Override

@@ -8,20 +8,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import jp.noriokun4649.noriotter2.R;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class UserListItemAdapter extends ArrayAdapter<UserList> {
     private final LayoutInflater inflater;
-    private List<UserList> arrayList;
-    private Context context;
+    private final List<UserList> arrayList;
+    private final Context context;
 
     public UserListItemAdapter(final Context context, final List<UserList> objects) {
         super(context, 0, objects);

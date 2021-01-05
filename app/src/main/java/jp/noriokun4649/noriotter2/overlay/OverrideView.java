@@ -23,7 +23,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,7 +30,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -50,8 +48,8 @@ import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 import twitter4j.AsyncTwitter;
 
 import static android.widget.Toast.makeText;
-import static jp.noriokun4649.noriotter2.overlay.ScreenConectActivity.mImageReader;
 import static jp.noriokun4649.noriotter2.overlay.ScreenConectActivity.mHeight;
+import static jp.noriokun4649.noriotter2.overlay.ScreenConectActivity.mImageReader;
 import static jp.noriokun4649.noriotter2.overlay.ScreenConectActivity.mWidth;
 
 
@@ -87,10 +85,10 @@ public class OverrideView extends Service {
         final SharedPreferences.Editor editor = preference.edit();
         //画面に常に表示するビューのレイアウトの設定
         int layoutParams;
-        if (Build.VERSION.SDK_INT >= 26){
-            layoutParams= WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        }else {
-            layoutParams= WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        if (Build.VERSION.SDK_INT >= 26) {
+            layoutParams = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            layoutParams = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }
         final WindowManager.LayoutParams params
                 = new WindowManager.LayoutParams(
@@ -101,40 +99,34 @@ public class OverrideView extends Service {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
-        final View.OnTouchListener taxt = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (!longnow) {
-                    return false;
-                }
-                int rawx = (int) motionEvent.getRawX();
-                int rawy = (int) motionEvent.getRawY();// - 120;
-                if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                    int centerX = rawx - (size().x / 2);
-                    int centerY = rawy - (size().y / 2);
-                    params.x = centerX;
-                    params.y = centerY;
-                    editor.putInt("y", centerY).apply();
-                    editor.putInt("x", centerX).apply();
-                    wm.updateViewLayout(player_view, params);
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    player_view.setBackgroundColor(preference.getInt("main_color", Color.argb(60, 0, 0, 0)));
-                    setTextColor(preference);
-                    longnow = false;
-                }
-                return true;
-            }
-        };
-
-        View.OnLongClickListener lons = new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                longnow = true;
-                player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                setTextColor(preference);
-                player_view.setOnTouchListener(taxt);
+        final View.OnTouchListener taxt = (view, motionEvent) -> {
+            if (!longnow) {
                 return false;
             }
+            int rawx = (int) motionEvent.getRawX();
+            int rawy = (int) motionEvent.getRawY();// - 120;
+            if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                int centerX = rawx - (size().x / 2);
+                int centerY = rawy - (size().y / 2);
+                params.x = centerX;
+                params.y = centerY;
+                editor.putInt("y", centerY).apply();
+                editor.putInt("x", centerX).apply();
+                wm.updateViewLayout(player_view, params);
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                player_view.setBackgroundColor(preference.getInt("main_color", Color.argb(60, 0, 0, 0)));
+                setTextColor(preference);
+                longnow = false;
+            }
+            return true;
+        };
+
+        View.OnLongClickListener lons = v -> {
+            longnow = true;
+            player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+            setTextColor(preference);
+            player_view.setOnTouchListener(taxt);
+            return false;
         };
         wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         player_view = inflater.inflate(R.layout.input, null);
@@ -144,33 +136,22 @@ public class OverrideView extends Service {
         twitterIn = new TwitterConnect(player_view.getContext());
         //レイヤーに重ねたいビュー
         twitterIn.login();
-        final CheckBox shot = (CheckBox) player_view.findViewById(R.id.checkBox);
-        shot.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if (mImageReader == null) {
-                        startActivity(new Intent(OverrideView.this, ScreenConectActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                    }
+        final CheckBox shot = player_view.findViewById(R.id.checkBox);
+        shot.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (mImageReader == null) {
+                    startActivity(new Intent(OverrideView.this, ScreenConectActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 }
             }
         });
-        textView3 = (TextView) player_view.findViewById(R.id.textView4);
-        final EditText editText3 = (EditText) player_view.findViewById(R.id.editText);
-        editText3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkBox.setChecked(true);
-            }
-        });
-        editText3.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                longnow = true;
-                player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                editText3.setOnTouchListener(taxt);
-                return false;
-            }
+        textView3 = player_view.findViewById(R.id.textView4);
+        final EditText editText3 = player_view.findViewById(R.id.editText);
+        editText3.setOnClickListener(v -> checkBox.setChecked(true));
+        editText3.setOnLongClickListener(v -> {
+            longnow = true;
+            player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+            editText3.setOnTouchListener(taxt);
+            return false;
         });
         editText3.addTextChangedListener(new TextWatcher() {
             @Override
@@ -184,132 +165,12 @@ public class OverrideView extends Service {
             @Override
             public void afterTextChanged(Editable s) {
                 now = base - editText3.getText().toString().length();
-                textView3.setText("残り文字数:" + now);
+                textView3.setText(String.format("残り文字数:%d", now));
             }
         });
         editText3.setImeOptions(EditorInfo.IME_ACTION_SEND);
-        editText3.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    Toast ts = makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-                    boolean isshot = false;
-                    try {
-                        ts.setGravity(Gravity.TOP, 0, 0);
-                        boolean loginFlag = sharedPreferences.getBoolean("flag", false);
-                        if (loginFlag) {
-                            String fat = editText3.getText().toString();
-
-                            if (now < 0) {
-                                ts.setText("文字数を超えています");
-                                ts.show();
-                            } else {
-                                if (shot.isChecked()) {
-                                    isshot = true;
-                                    //twitterIn.twitPhoto(fat, getBitmapFiles());
-                                    TweetTask testTask = new TweetTask(OverrideView.this, twitterIn, fat);
-                                    // executeを呼んでAsyncTaskを実行する、パラメータは１番目
-                                    testTask.execute(0);
-                                } else {
-                                    if (!fat.equals("")) {
-                                        twitterIn.getmTwitter().updateStatus(fat);
-                                    } else {
-                                        ts.setText("内容がありません");
-                                        ts.show();
-                                    }
-                                }
-                                //キーボード閉じる
-                                InputMethodManager inputMethodManager = (InputMethodManager) player_view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                inputMethodManager.hideSoftInputFromWindow(player_view.getWindowToken(), 0);
-                                editText3.setText("");
-                                checkBox.setChecked(false);
-                                shot.setChecked(false);
-                                boolean setete = preference.getBoolean("autoresize2", false);
-                                if (preference.getBoolean("autoresize", false) || (setete && isshot)) {
-                                    params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                                    wm.updateViewLayout(player_view, params);
-                                    LinearLayout linearLayout = (LinearLayout) player_view.findViewById(R.id.laus);
-                                    linearLayout.removeAllViews();
-                                    view = inflater.inflate(R.layout.input2, linearLayout);
-                                    final ImageView close = (ImageView) view.findViewById(R.id.imageView4);
-                                    close.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            stopService(new Intent(OverrideView.this, OverrideView.class));
-                                        }
-                                    });
-                                    close.setOnLongClickListener(new View.OnLongClickListener() {
-                                        @Override
-                                        public boolean onLongClick(View v) {
-                                            longnow = true;
-                                            player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                                            close.setOnTouchListener(taxt);
-                                            return false;
-                                        }
-                                    });
-                                    final ImageView goapp = (ImageView) view.findViewById(R.id.imageView6);
-                                    goapp.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            editor.putBoolean("autostart", false).apply();
-                                            startActivity(new Intent(OverrideView.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                                        }
-                                    });
-                                    goapp.setOnLongClickListener(new View.OnLongClickListener() {
-                                        @Override
-                                        public boolean onLongClick(View v) {
-                                            longnow = true;
-                                            player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                                            goapp.setOnTouchListener(taxt);
-                                            return false;
-                                        }
-                                    });
-                                    final ImageView big = (ImageView) view.findViewById(R.id.imageView5);
-                                    big.setOnLongClickListener(new View.OnLongClickListener() {
-                                        @Override
-                                        public boolean onLongClick(View v) {
-                                            longnow = true;
-                                            player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                                            big.setOnTouchListener(taxt);
-                                            return false;
-                                        }
-                                    });
-                                    big.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.laus2);
-                                            linearLayout.removeAllViews();
-                                            wm.removeView(player_view);
-                                            //inflater.inflate(R.layout.input,linearLayout);
-                                            //onStartCommand(intent, flags, startId);
-                                            onCreate();
-                                        }
-                                    });
-
-                                }
-                            }
-                        } else {
-                            ts.setText("アプリケーションに戻り\nOAuth認証をしてください");
-                            ts.show();
-                        }
-                    } catch (NullPointerException e) {
-                        Log.e("Noriotter", e.toString());
-                        ts.setText("アプリケーションに戻り\nスクショを許可してください");
-                        ts.show();
-                    } catch (UnsupportedOperationException e) {
-                        ts.setText("お使いの端末がサポートしていない入力カラーフォーマット形式です\n\nアプリケーションに戻り変更してみてください");
-                        ts.show();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-        ImageButton button2 = (ImageButton) player_view.findViewById(R.id.button);
-        button2.setImageResource(R.drawable.ic_send_white_24dp);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View viewd) {
+        editText3.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
                 Toast ts = makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
                 boolean isshot = false;
                 try {
@@ -317,6 +178,7 @@ public class OverrideView extends Service {
                     boolean loginFlag = sharedPreferences.getBoolean("flag", false);
                     if (loginFlag) {
                         String fat = editText3.getText().toString();
+
                         if (now < 0) {
                             ts.setText("文字数を超えています");
                             ts.show();
@@ -341,68 +203,53 @@ public class OverrideView extends Service {
                             editText3.setText("");
                             checkBox.setChecked(false);
                             shot.setChecked(false);
-
                             boolean setete = preference.getBoolean("autoresize2", false);
                             if (preference.getBoolean("autoresize", false) || (setete && isshot)) {
                                 params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                                 wm.updateViewLayout(player_view, params);
-                                LinearLayout linearLayout = (LinearLayout) player_view.findViewById(R.id.laus);
+                                LinearLayout linearLayout = player_view.findViewById(R.id.laus);
                                 linearLayout.removeAllViews();
                                 view = inflater.inflate(R.layout.input2, linearLayout);
-                                final ImageView close = (ImageView) view.findViewById(R.id.imageView4);
+                                final ImageView close = view.findViewById(R.id.imageView4);
                                 close.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         stopService(new Intent(OverrideView.this, OverrideView.class));
                                     }
                                 });
-                                close.setOnLongClickListener(new View.OnLongClickListener() {
-                                    @Override
-                                    public boolean onLongClick(View v) {
-                                        longnow = true;
-                                        player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                                        close.setOnTouchListener(taxt);
-                                        return false;
-                                    }
+                                close.setOnLongClickListener(v1 -> {
+                                    longnow = true;
+                                    player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+                                    close.setOnTouchListener(taxt);
+                                    return false;
                                 });
-                                final ImageView goapp = (ImageView) view.findViewById(R.id.imageView6);
-                                goapp.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        editor.putBoolean("autostart", false).apply();
-                                        startActivity(new Intent(OverrideView.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                                    }
+                                final ImageView goapp = view.findViewById(R.id.imageView6);
+                                goapp.setOnClickListener(v12 -> {
+                                    editor.putBoolean("autostart", false).apply();
+                                    startActivity(new Intent(OverrideView.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                 });
-                                goapp.setOnLongClickListener(new View.OnLongClickListener() {
-                                    @Override
-                                    public boolean onLongClick(View v) {
-                                        longnow = true;
-                                        player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                                        goapp.setOnTouchListener(taxt);
-                                        return false;
-                                    }
+                                goapp.setOnLongClickListener(v13 -> {
+                                    longnow = true;
+                                    player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+                                    goapp.setOnTouchListener(taxt);
+                                    return false;
                                 });
-                                final ImageView big = (ImageView) view.findViewById(R.id.imageView5);
-                                big.setOnLongClickListener(new View.OnLongClickListener() {
-                                    @Override
-                                    public boolean onLongClick(View v) {
-                                        longnow = true;
-                                        player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                                        big.setOnTouchListener(taxt);
-                                        return false;
-                                    }
+                                final ImageView big = view.findViewById(R.id.imageView5);
+                                big.setOnLongClickListener(v14 -> {
+                                    longnow = true;
+                                    player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+                                    big.setOnTouchListener(taxt);
+                                    return false;
                                 });
-                                big.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.laus2);
-                                        linearLayout.removeAllViews();
-                                        wm.removeView(player_view);
-                                        //inflater.inflate(R.layout.input,linearLayout);
-                                        //onStartCommand(intent, flags, startId);
-                                        onCreate();
-                                    }
+                                big.setOnClickListener(v15 -> {
+                                    LinearLayout linearLayout1 = view.findViewById(R.id.laus2);
+                                    linearLayout1.removeAllViews();
+                                    wm.removeView(player_view);
+                                    //inflater.inflate(R.layout.input,linearLayout);
+                                    //onStartCommand(intent, flags, startId);
+                                    onCreate();
                                 });
+
                             }
                         }
                     } else {
@@ -417,144 +264,190 @@ public class OverrideView extends Service {
                     ts.setText("お使いの端末がサポートしていない入力カラーフォーマット形式です\n\nアプリケーションに戻り変更してみてください");
                     ts.show();
                 }
+                return true;
             }
+            return false;
         });
-        checkBox = (CheckBox) player_view.findViewById(R.id.check);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        ImageButton button2 = player_view.findViewById(R.id.button);
+        button2.setImageResource(R.drawable.ic_send_white_24dp);
+        button2.setOnClickListener(viewd -> {
+            Toast ts = makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+            boolean isshot = false;
+            try {
+                ts.setGravity(Gravity.TOP, 0, 0);
+                boolean loginFlag = sharedPreferences.getBoolean("flag", false);
+                if (loginFlag) {
+                    String fat = editText3.getText().toString();
+                    if (now < 0) {
+                        ts.setText("文字数を超えています");
+                        ts.show();
+                    } else {
+                        if (shot.isChecked()) {
+                            isshot = true;
+                            //twitterIn.twitPhoto(fat, getBitmapFiles());
+                            TweetTask testTask = new TweetTask(OverrideView.this, twitterIn, fat);
+                            // executeを呼んでAsyncTaskを実行する、パラメータは１番目
+                            testTask.execute(0);
+                        } else {
+                            if (!fat.equals("")) {
+                                twitterIn.getmTwitter().updateStatus(fat);
+                            } else {
+                                ts.setText("内容がありません");
+                                ts.show();
+                            }
+                        }
+                        //キーボード閉じる
+                        InputMethodManager inputMethodManager = (InputMethodManager) player_view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(player_view.getWindowToken(), 0);
+                        editText3.setText("");
+                        checkBox.setChecked(false);
+                        shot.setChecked(false);
 
-                params.flags = isChecked ? WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL : WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                wm.updateViewLayout(player_view, params);
-            }
-        });
-        checkBox.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                longnow = true;
-                player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                checkBox.setOnTouchListener(taxt);
-                return false;
-            }
-        });
-        ImageView goapp = (ImageView) player_view.findViewById(R.id.imageView7);
-        goapp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(OverrideView.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            }
-        });
-        ImageView delete = (ImageView) player_view.findViewById(R.id.imageView9);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor1 = sharedPreferences.edit();
-                Long id = sharedPreferences.getLong("id", 0);
-                AsyncTwitter a = twitterIn.getmTwitter();
-                if (id != 0) {
-                    a.destroyStatus(id);
-                    editor1.remove("id").apply();
+                        boolean setete = preference.getBoolean("autoresize2", false);
+                        if (preference.getBoolean("autoresize", false) || (setete && isshot)) {
+                            params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                            wm.updateViewLayout(player_view, params);
+                            LinearLayout linearLayout = player_view.findViewById(R.id.laus);
+                            linearLayout.removeAllViews();
+                            view = inflater.inflate(R.layout.input2, linearLayout);
+                            final ImageView close = view.findViewById(R.id.imageView4);
+                            close.setOnClickListener(v -> stopService(new Intent(OverrideView.this, OverrideView.class)));
+                            close.setOnLongClickListener(v -> {
+                                longnow = true;
+                                player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+                                close.setOnTouchListener(taxt);
+                                return false;
+                            });
+                            final ImageView goapp = view.findViewById(R.id.imageView6);
+                            goapp.setOnClickListener(v -> {
+                                editor.putBoolean("autostart", false).apply();
+                                startActivity(new Intent(OverrideView.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            });
+                            goapp.setOnLongClickListener(v -> {
+                                longnow = true;
+                                player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+                                goapp.setOnTouchListener(taxt);
+                                return false;
+                            });
+                            final ImageView big = view.findViewById(R.id.imageView5);
+                            big.setOnLongClickListener(v -> {
+                                longnow = true;
+                                player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+                                big.setOnTouchListener(taxt);
+                                return false;
+                            });
+                            big.setOnClickListener(v -> {
+                                LinearLayout linearLayout12 = view.findViewById(R.id.laus2);
+                                linearLayout12.removeAllViews();
+                                wm.removeView(player_view);
+                                //inflater.inflate(R.layout.input,linearLayout);
+                                //onStartCommand(intent, flags, startId);
+                                onCreate();
+                            });
+                        }
+                    }
                 } else {
-                    Toast ts = Toast.makeText(getApplicationContext(), "このアプリから送信された直前のツイートが見つからなかったため削除できませんでした", Toast.LENGTH_SHORT);
-                    ts.setGravity(Gravity.TOP, 0, 0);
+                    ts.setText("アプリケーションに戻り\nOAuth認証をしてください");
                     ts.show();
                 }
+            } catch (NullPointerException e) {
+                Log.e("Noriotter", e.toString());
+                ts.setText("アプリケーションに戻り\nスクショを許可してください");
+                ts.show();
+            } catch (UnsupportedOperationException e) {
+                ts.setText("お使いの端末がサポートしていない入力カラーフォーマット形式です\n\nアプリケーションに戻り変更してみてください");
+                ts.show();
+            }
+        });
+        checkBox = player_view.findViewById(R.id.check);
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+            params.flags = isChecked ? WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL : WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            wm.updateViewLayout(player_view, params);
+        });
+        checkBox.setOnLongClickListener(v -> {
+            longnow = true;
+            player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+            checkBox.setOnTouchListener(taxt);
+            return false;
+        });
+        ImageView goapp = player_view.findViewById(R.id.imageView7);
+        goapp.setOnClickListener(v -> startActivity(new Intent(OverrideView.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));
+        ImageView delete = player_view.findViewById(R.id.imageView9);
+        delete.setOnClickListener(v -> {
+            SharedPreferences sharedPreferences1 = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+            Long id = sharedPreferences1.getLong("id", 0);
+            AsyncTwitter a = twitterIn.getmTwitter();
+            if (id != 0) {
+                a.destroyStatus(id);
+                editor1.remove("id").apply();
+            } else {
+                Toast ts = Toast.makeText(getApplicationContext(), "このアプリから送信された直前のツイートが見つからなかったため削除できませんでした", Toast.LENGTH_SHORT);
+                ts.setGravity(Gravity.TOP, 0, 0);
+                ts.show();
             }
         });
         //checkBox.setChecked(params.flags == WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE ? false : true);
-        ImageView imageView = (ImageView) player_view.findViewById(R.id.imageView2);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopService(new Intent(OverrideView.this, OverrideView.class));
-            }
-        });
-        ImageView imageView2 = (ImageView) player_view.findViewById(R.id.imageView3);
-        imageView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        ImageView imageView = player_view.findViewById(R.id.imageView2);
+        imageView.setOnClickListener(v -> stopService(new Intent(OverrideView.this, OverrideView.class)));
+        ImageView imageView2 = player_view.findViewById(R.id.imageView3);
+        imageView2.setOnClickListener(v -> {
 
-                params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                wm.updateViewLayout(player_view, params);
-                LinearLayout linearLayout = (LinearLayout) player_view.findViewById(R.id.laus);
-                linearLayout.removeAllViews();
-                view = inflater.inflate(R.layout.input2, linearLayout);
-                final ImageView close = (ImageView) view.findViewById(R.id.imageView4);
-                close.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        stopService(new Intent(OverrideView.this, OverrideView.class));
-                    }
-                });
-                close.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        longnow = true;
-                        player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                        close.setOnTouchListener(taxt);
-                        return false;
-                    }
-                });
-                final ImageView goapp = (ImageView) view.findViewById(R.id.imageView6);
-                goapp.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(OverrideView.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                    }
-                });
-                goapp.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        longnow = true;
-                        player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                        goapp.setOnTouchListener(taxt);
-                        return false;
-                    }
-                });
-                final ImageView big = (ImageView) view.findViewById(R.id.imageView5);
-                big.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        longnow = true;
-                        player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
-                        big.setOnTouchListener(taxt);
-                        return false;
-                    }
-                });
-                big.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.laus2);
-                        linearLayout.removeAllViews();
-                        wm.removeView(player_view);
-                        //inflater.inflate(R.layout.input,linearLayout);
-                        //onStartCommand(intent, flags, startId);
-                        onCreate();
-                    }
-                });
-            }
+            params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            wm.updateViewLayout(player_view, params);
+            LinearLayout linearLayout = player_view.findViewById(R.id.laus);
+            linearLayout.removeAllViews();
+            view = inflater.inflate(R.layout.input2, linearLayout);
+            final ImageView close = view.findViewById(R.id.imageView4);
+            close.setOnClickListener(v16 -> stopService(new Intent(OverrideView.this, OverrideView.class)));
+            close.setOnLongClickListener(v17 -> {
+                longnow = true;
+                player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+                close.setOnTouchListener(taxt);
+                return false;
+            });
+            final ImageView goapp1 = view.findViewById(R.id.imageView6);
+            goapp1.setOnClickListener(v18 -> startActivity(new Intent(OverrideView.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));
+            goapp1.setOnLongClickListener(v19 -> {
+                longnow = true;
+                player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+                goapp1.setOnTouchListener(taxt);
+                return false;
+            });
+            final ImageView big = view.findViewById(R.id.imageView5);
+            big.setOnLongClickListener(v110 -> {
+                longnow = true;
+                player_view.setBackgroundColor(preference.getInt("back_color", Color.argb(60, 255, 0, 0)));
+                big.setOnTouchListener(taxt);
+                return false;
+            });
+            big.setOnClickListener(v111 -> {
+                LinearLayout linearLayout13 = view.findViewById(R.id.laus2);
+                linearLayout13.removeAllViews();
+                wm.removeView(player_view);
+                //inflater.inflate(R.layout.input,linearLayout);
+                //onStartCommand(intent, flags, startId);
+                onCreate();
+            });
         });
-        ImageView imageView10 = (ImageView) player_view.findViewById(R.id.imageView10);
+        ImageView imageView10 = player_view.findViewById(R.id.imageView10);
         imageView10.setImageResource(R.drawable.ic_content_paste_white_24dp);
-        imageView10.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                if (clipboard != null) {
-                    // クリップボードにデータがある場合
-                    if (clipboard.hasPrimaryClip()) {
-                        // クリップボードのデータがテキストの場合
-                        if (clipboard.getPrimaryClipDescription().hasMimeType(
-                                ClipDescription.MIMETYPE_TEXT_PLAIN) || clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
-                            // コピーしたアイテムを取得
-                            ClipData.Item item = clipboard.getPrimaryClip()
-                                    .getItemAt(0);
-                            // ペーストする文字列をクリップボードから取得
-                            String pasteData = item.getText().toString();
-                            if (pasteData != null) {
-                                editText3.setText(pasteData);
-                            }
+        imageView10.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            if (clipboard != null) {
+                // クリップボードにデータがある場合
+                if (clipboard.hasPrimaryClip()) {
+                    // クリップボードのデータがテキストの場合
+                    if (clipboard.getPrimaryClipDescription().hasMimeType(
+                            ClipDescription.MIMETYPE_TEXT_PLAIN) || clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
+                        // コピーしたアイテムを取得
+                        ClipData.Item item = clipboard.getPrimaryClip()
+                                .getItemAt(0);
+                        // ペーストする文字列をクリップボードから取得
+                        String pasteData = item.getText().toString();
+                        if (pasteData != null) {
+                            editText3.setText(pasteData);
                         }
                     }
                 }
@@ -588,7 +481,7 @@ public class OverrideView extends Service {
             int rowStride = planes[0].getRowStride();
             int rowPadding = rowStride - pixelStride * mWidth;
             // バッファからBitmapを生成
-            Bitmap.Config config = Bitmap.Config.ARGB_8888;
+            Bitmap.Config config;
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(OverrideView.this);
             int outformat = sharedPreferences.getInt("outformat", 0);
             switch (outformat) {
@@ -659,12 +552,13 @@ public class OverrideView extends Service {
         }
         return null;
     }
-    private void setTextColor(SharedPreferences preference){
-        EditText editText = (EditText) player_view.findViewById(R.id.editText);
-        TextView textView = (TextView) player_view.findViewById(R.id.textView4);
-        CheckBox cc = (CheckBox) player_view.findViewById(R.id.check);
-        CheckBox ccb = (CheckBox) player_view.findViewById(R.id.checkBox);
-        if (cc != null){
+
+    private void setTextColor(SharedPreferences preference) {
+        EditText editText = player_view.findViewById(R.id.editText);
+        TextView textView = player_view.findViewById(R.id.textView4);
+        CheckBox cc = player_view.findViewById(R.id.check);
+        CheckBox ccb = player_view.findViewById(R.id.checkBox);
+        if (cc != null) {
             cc.setTextColor(preference.getInt("text_color", Color.argb(255, 255, 255, 255)));
             ccb.setTextColor(preference.getInt("text_color", Color.argb(255, 255, 255, 255)));
             textView.setTextColor(preference.getInt("text_color", Color.argb(255, 255, 255, 255)));
