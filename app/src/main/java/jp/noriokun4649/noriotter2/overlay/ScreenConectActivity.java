@@ -56,11 +56,16 @@ public class ScreenConectActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (requestCode == REQUEST_CODE_SCREEN_CAPTURE) {
                 if (resultCode != RESULT_OK) {
                     //パーミッションなし
                     Toast.makeText(this, "スクリーンショット取得には許可が必要です", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Toast.makeText(this, "現在のAndroid10以上ではスクリーンショットの取得に対応していません", Toast.LENGTH_LONG).show();
                     return;
                 }
                 // MediaProjectionの取得
