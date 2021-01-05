@@ -75,7 +75,7 @@ public class ListListActivity extends AppCompatActivity {
                         for (UserList list : userLists) {
                             ListList listList1 = new ListList(list.getName(), list.getMemberCount(),
                                     list.getId(), list.getUser().getName(),
-                                    list.getUser().get400x400ProfileImageURL(),
+                                    list.getUser().get400x400ProfileImageURLHttps(),
                                     list.getDescription(), list.isPublic());
                             adapter.add(listList1);
                             adapter.notifyDataSetChanged();
