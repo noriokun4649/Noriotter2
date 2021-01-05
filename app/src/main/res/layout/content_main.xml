@@ -36,17 +36,6 @@
                 android:layout_height="match_parent"
                 android:text="@string/real_time_home" />
 
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/tab_notice"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/notice" />
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/tab_dm"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/dm" />
 
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>

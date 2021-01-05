@@ -163,21 +163,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_free_tweet) {
             startActivity(new Intent(MainActivity.this,DokodemoTweetActivity.class));
         }
-/*
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-*/
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
@@ -211,7 +196,7 @@ public class MainActivity extends AppCompatActivity
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(final FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
@@ -221,10 +206,12 @@ public class MainActivity extends AppCompatActivity
                     return new TimeLine();
                 case 1:
                     return new RealTimeLine();
+                    /*
                 case 2:
                     return new Notice();
                 case 3:
                     return new DirectMessage();
+                     */
                 default:
                     return new TimeLine();
             }
