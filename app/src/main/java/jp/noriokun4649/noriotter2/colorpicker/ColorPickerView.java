@@ -886,7 +886,6 @@ public class ColorPickerView extends View {
             mSatShader = null;
             mHueShader = null;
             mAlphaShader = null;
-            ;
 
             requestLayout();
         }
@@ -939,6 +938,6 @@ public class ColorPickerView extends View {
     }
 
     public interface OnColorChangedListener {
-        public void onColorChanged(int color);
+        void onColorChanged(int color);
     }
 }

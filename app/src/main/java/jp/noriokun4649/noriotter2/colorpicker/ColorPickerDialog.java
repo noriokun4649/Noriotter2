@@ -82,11 +82,11 @@ public class ColorPickerDialog
 
         setTitle("カラーコード入力");
 
-        mColorPicker = (ColorPickerView) layout.findViewById(R.id.color_picker_view);
-        mOldColor = (ColorPickerPanelView) layout.findViewById(R.id.old_color_panel);
-        mNewColor = (ColorPickerPanelView) layout.findViewById(R.id.new_color_panel);
+        mColorPicker = layout.findViewById(R.id.color_picker_view);
+        mOldColor = layout.findViewById(R.id.old_color_panel);
+        mNewColor = layout.findViewById(R.id.new_color_panel);
 
-        mHexVal = (EditText) layout.findViewById(R.id.hex_val);
+        mHexVal = layout.findViewById(R.id.hex_val);
         mHexVal.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mHexDefaultTextColor = mHexVal.getTextColors();
 
@@ -100,7 +100,7 @@ public class ColorPickerDialog
                     String s = mHexVal.getText().toString();
                     if (s.length() > 5 || s.length() < 10) {
                         try {
-                            int c = ColorPickerPreference.convertToColorInt(s.toString());
+                            int c = ColorPickerPreference.convertToColorInt(s);
                             mColorPicker.setColor(c, true);
                             mHexVal.setTextColor(mHexDefaultTextColor);
                         } catch (IllegalArgumentException e) {
@@ -133,7 +133,7 @@ public class ColorPickerDialog
         windowManager.getDefaultDisplay().getMetrics(metrics);
 
         if (metrics.densityDpi == DisplayMetrics.DENSITY_LOW) {
-            LinearLayout textLayout = (LinearLayout) layout.findViewById(R.id.text_hex_wrapper);
+            LinearLayout textLayout = layout.findViewById(R.id.text_hex_wrapper);
             textLayout.setVisibility(LinearLayout.GONE);
             mOldColor.getLayoutParams().height = COLORPICKERPANEVIEW_LDPI_HEIGHT;
             mNewColor.getLayoutParams().height = COLORPICKERPANEVIEW_LDPI_HEIGHT;
