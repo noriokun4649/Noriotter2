@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:text="スクショカラフォ形式選択" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,13 +55,13 @@
             android:layout_alignParentTop="true"
             android:text="ツイート後自動で最小化" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="スクショ時のみツイート後自動で最小化" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

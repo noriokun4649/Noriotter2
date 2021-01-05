@@ -15,12 +15,12 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -37,7 +37,7 @@ import jp.noriokun4649.noriotter2.twitter.TwitterConnect;
 
 public class DokodemoTweetActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PLEASE_GRANT_PERMISSION = 3;
-    public TwitterConnect twitterIn = new TwitterConnect(this);
+    public final TwitterConnect twitterIn = new TwitterConnect(this);
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -129,17 +129,17 @@ public class DokodemoTweetActivity extends AppCompatActivity {
             ab.show();
         });
         final SharedPreferences.Editor editor = sharedPreferences.edit();
-        Switch sw = findViewById(R.id.switch1);
+        SwitchCompat sw = findViewById(R.id.switch1);
 
         sw.setOnCheckedChangeListener((buttonView, isChecked) -> editor.putBoolean("autoresize", isChecked).apply());
         sw.setChecked(sharedPreferences.getBoolean("autoresize", false));
 
-        Switch sw2 = findViewById(R.id.switch2);
+        SwitchCompat sw2 = findViewById(R.id.switch2);
 
         sw2.setOnCheckedChangeListener((buttonView, isChecked) -> editor.putBoolean("autostart", isChecked).apply());
         sw2.setChecked(sharedPreferences.getBoolean("autostart", false));
 
-        Switch sw3 = findViewById(R.id.switch3);
+        SwitchCompat sw3 = findViewById(R.id.switch3);
         sw3.setOnCheckedChangeListener((buttonView, isChecked) -> editor.putBoolean("autoresize2", isChecked).apply());
         sw3.setChecked(sharedPreferences.getBoolean("autoresize2", false));
 

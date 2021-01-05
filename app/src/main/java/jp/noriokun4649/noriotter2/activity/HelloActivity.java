@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,11 +45,12 @@ public class HelloActivity extends AppCompatActivity {
         });
 
         File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Pictures/Noriotter2/");
-        if (!file.exists()) {
-            file.mkdir();
+        if (!file.exists() && !file.mkdir()) {
+            Toast.makeText(this, R.string.cancel, Toast.LENGTH_LONG).show();
         }
         try {
-            file.createNewFile();
+            if (!file.createNewFile())
+                Toast.makeText(this, R.string.cancel, Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
         }

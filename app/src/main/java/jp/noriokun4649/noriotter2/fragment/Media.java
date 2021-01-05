@@ -24,7 +24,7 @@ public class Media extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.media_fr_layout, null);
+        final View view = inflater.inflate(R.layout.media_fr_layout, container, false);
         int index = getArguments().getInt("image_index");
         String url = getArguments().getString("image_url");
         ImageView imageView2 = view.findViewById(R.id.imageView2);

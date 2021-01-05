@@ -21,6 +21,8 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsLayoutInflater2;
 
+import org.jetbrains.annotations.NotNull;
+
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.fragment.search.TweetSearch;
 import jp.noriokun4649.noriotter2.fragment.search.UserSearch;
@@ -90,7 +92,7 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         @Override
-        public Fragment getItem(final int position) {
+        public @NotNull Fragment getItem(final int position) {
             if (position == 1) {
                 return new UserSearch();
             }

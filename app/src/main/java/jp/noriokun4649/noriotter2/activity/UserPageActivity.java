@@ -28,6 +28,7 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater2;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.fragment.userprofile.UserLike;
@@ -118,7 +119,7 @@ public class UserPageActivity extends AppCompatActivity implements StatusCallBac
                 intent.putExtra("user_id", user.getId());
                 startActivity(intent);
             }));
-            textStartDay.setText(new SimpleDateFormat("yyyy年MM月dd日").format(user.getCreatedAt()));
+            textStartDay.setText(new SimpleDateFormat("yyyy年MM月dd日", Locale.JAPANESE).format(user.getCreatedAt()));
             //toolbar.setTitle(user.getName()+user.getStatusesCount()+"ツイート");
 
             mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

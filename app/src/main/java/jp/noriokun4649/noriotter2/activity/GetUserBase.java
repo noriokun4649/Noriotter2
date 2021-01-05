@@ -74,12 +74,6 @@ abstract class GetUserBase extends AppCompatActivity
         listView.setEmptyView(linearLayout);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-
     /**
      * リストViewのアダプタにサークル情報を入れる処理をするメソッド.
      *

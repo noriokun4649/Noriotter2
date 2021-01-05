@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         /*
         if (id == R.id.action_settings) {
             return true;
@@ -196,28 +195,24 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public static class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(final FragmentManager fm) {
             super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
         public @NotNull Fragment getItem(final int position) {
-            switch (position) {
-                case 0:
-                    return new TimeLine();
-                case 1:
-                    return new RealTimeLine();
+            if (position == 1) {
+                return new RealTimeLine();
                     /*
                 case 2:
                     return new Notice();
                 case 3:
                     return new DirectMessage();
                      */
-                default:
-                    return new TimeLine();
             }
-            //return PlaceholderFragment.newInstance(position + 1);
+            return new TimeLine();
+//return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override

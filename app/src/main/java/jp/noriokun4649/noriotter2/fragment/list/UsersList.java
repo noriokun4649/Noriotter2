@@ -28,7 +28,7 @@ public class UsersList extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.user_list_layout, null);
+        final View view = inflater.inflate(R.layout.user_list_layout, container);
         long listId = getArguments().getLong("list_id");
         int count = getArguments().getInt("list_count");
         LinearLayout linearLayout = view.findViewById(R.id.progress);

@@ -43,7 +43,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import jp.noriokun4649.noriotter2.R;
 import jp.noriokun4649.noriotter2.activity.MediaActivity;
@@ -102,7 +101,7 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.tl_layout, null);
+        final View view = inflater.inflate(R.layout.tl_layout, container, false);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
         twitterConnect = new TwitterConnect(inflater.getContext());
@@ -198,14 +197,14 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
                 quitScreenname.setText(tweetList.getScreanname());
                 quitText.setText(tweetList.getTwiite());
                 tweetButton.setOnClickListener(v -> {
-                    Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     asyncTwitter.updateStatus(new StatusUpdate(tweetList.getScreanname() + " " + edtext.getText()).inReplyToStatusId(tweetList.getTweetid()));
                     edtext.setText("");
                     constraintLayout.setVisibility(View.GONE);
                     quit.setVisibility(View.GONE);
                     tweetButton.setOnClickListener(onClickListener);
                 });
-            } else if (getId == R.id.textView36) {
+                //} else if (getId == R.id.textView36) {
             } else if (getId == R.id.imageView8) {
                 Intent intent = new Intent(getActivity(), UserPageActivity.class);
                 intent.putExtra("userid", tweetList.getScreanname());
@@ -275,7 +274,7 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
                                 quitScreenname.setText(tweetList.getScreanname());
                                 quitText.setText(tweetList.getTwiite());
                                 tweetButton.setOnClickListener(v -> {
-                                    Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                                    requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                                     asyncTwitter.updateStatus(edtext.getText() + "\nhttps://twitter.com/"
                                             + tweetList.getScreanname().replace("@", "") + "/status/" + tweetList.getTweetid());
                                     edtext.setText("");
@@ -319,7 +318,7 @@ public abstract class TimeLineBase extends Fragment implements ICallBack, Status
                                  final Intent resultData) {
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK && resultData != null && resultData.getData() != null) {
             Uri uri = resultData.getData();
-            try (Cursor cursor = Objects.requireNonNull(getContext()).getContentResolver().query(uri, null,
+            try (Cursor cursor = requireContext().getContentResolver().query(uri, null,
                     null, null, null, null);
                  InputStream inputStream = getContext().getContentResolver().openInputStream(uri)) {
                 if (cursor != null) {

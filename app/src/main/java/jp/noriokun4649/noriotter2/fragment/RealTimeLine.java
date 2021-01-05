@@ -1,7 +1,5 @@
 package jp.noriokun4649.noriotter2.fragment;
 
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
@@ -10,6 +8,9 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import jp.noriokun4649.noriotter2.twitter.GetStatus;
 import jp.noriokun4649.noriotter2.twitter.ICallBack;
@@ -66,8 +67,12 @@ public class RealTimeLine extends TimeLineBase implements StatusCallBack, ICallB
     public void callbackFollow(final long[] followd, final User user) {
         this.follow = followd;
         getStatus = new GetStatus(follow);
-        AsyncHttpRequest task = new AsyncHttpRequest();
-        task.execute();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            FilterQuery filterQuery = new FilterQuery(0, follow);
+            filterQuery.filterLevel("low");
+            twitterStream.filter(filterQuery);
+        });
     }
 
     @Override
@@ -97,22 +102,5 @@ public class RealTimeLine extends TimeLineBase implements StatusCallBack, ICallB
     @Override
     public void getOldLoad(final long index) {
 
-    }
-
-    class AsyncHttpRequest extends AsyncTask<Uri.Builder, Void, String> {
-        AsyncHttpRequest() {
-        }
-
-        @Override
-        protected String doInBackground(final Uri.Builder... builder) {
-            FilterQuery filterQuery = new FilterQuery(0, follow);
-            filterQuery.filterLevel("low");
-            twitterStream.filter(filterQuery);
-            return "";
-        }
-
-        @Override
-        protected void onPostExecute(final String result) {
-        }
     }
 }

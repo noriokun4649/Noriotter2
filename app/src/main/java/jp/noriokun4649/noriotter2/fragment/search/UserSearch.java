@@ -33,7 +33,7 @@ public class UserSearch extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.user_list_layout, null);
+        final View view = inflater.inflate(R.layout.user_list_layout, container);
         LinearLayout linearLayout = view.findViewById(R.id.progress);
         TextView textView = view.findViewById(R.id.textView4);
         textView.setText(R.string.getting_user_now);

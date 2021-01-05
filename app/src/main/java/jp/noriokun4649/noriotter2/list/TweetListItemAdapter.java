@@ -58,7 +58,7 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
 
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
-        final View view = inflater.inflate(R.layout.tl_list_layout, null, false);
+        final View view = inflater.inflate(R.layout.tl_list_layout, parent, false);
         View.OnClickListener clickListener = (View v) -> ((ListView) parent).performItemClick(v, position, v.getId());
         TextView textView6 = view.findViewById(R.id.textView6);
         TextView textView = view.findViewById(R.id.textView);
@@ -131,10 +131,10 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
         }
         textView33.setText("{cmd-message}");
         textView33.setOnClickListener(clickListener);
-        textView34.setText("{cmd-twitter-retweet}" + useredata.getRtcount());
+        textView34.setText(String.format("{cmd-twitter-retweet}%d", useredata.getRtcount()));
         textView34.setOnClickListener(clickListener);
         textView34.setTextColor(useredata.isMeRt() ? Color.GREEN : Color.BLACK);
-        textView35.setText("{gmd-favorite}" + useredata.getFavocount());
+        textView35.setText(String.format("{gmd-favorite}%d", useredata.getFavocount()));
         textView35.setOnClickListener(clickListener);
         textView35.setTextColor(useredata.isMeFav() ? Color.RED : Color.BLACK);
         textView36.setText("{gmd-share}");
@@ -143,17 +143,14 @@ public class TweetListItemAdapter extends ArrayAdapter<TweetList> {
         textView6.setText(useredata.getName());
         setLinks(textView7, useredata.getTwiite());
         textView8.setText(Html.fromHtml(useredata.getSource()));
-        textView8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                String in = useredata.getSource();
-                final Pattern urlPattern = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
-                final Matcher matcher = urlPattern.matcher(useredata.getSource());
-                while (matcher.find()) {
-                    Uri uri = Uri.parse(matcher.group());
-                    Intent i = new Intent(Intent.ACTION_VIEW, uri);
-                    context.startActivity(i);
-                }
+        textView8.setOnClickListener(v -> {
+            String in = useredata.getSource();
+            final Pattern urlPattern = Pattern.compile("(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+", Pattern.CASE_INSENSITIVE);
+            final Matcher matcher = urlPattern.matcher(useredata.getSource());
+            while (matcher.find()) {
+                Uri uri = Uri.parse(matcher.group());
+                Intent i = new Intent(Intent.ACTION_VIEW, uri);
+                context.startActivity(i);
             }
         });
         if (useredata.isLock()) {
